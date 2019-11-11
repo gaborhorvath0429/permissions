@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http'
 import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
-  MatSortModule, MatTableModule, MatCheckboxModule } from '@angular/material'
+  MatSortModule, MatTableModule, MatCheckboxModule, MatToolbarModule, MatListModule } from '@angular/material'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -34,7 +34,9 @@ import { GroupsComponent } from './groups/groups.component'
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatToolbarModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

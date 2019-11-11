@@ -1,5 +1,12 @@
 <div class="users">
+  <mat-toolbar>
+    <span>Users</span>
+  </mat-toolbar>
   <mat-form-field>
     <input matInput placeholder="Search">
   </mat-form-field>
+  <mat-action-list>
+      <button mat-list-item (click)="getUserRights()"> Feri </button>
+      <button mat-list-item (click)="getUserRights()"> Dezső </button>
+    </mat-action-list>
 </div>

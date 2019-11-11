@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { RightsService } from './../services/rights.service'
+import { Component, AfterViewInit, ViewChild } from '@angular/core'
+import { RightsGridComponent } from '../rights-grid/rights-grid.component'
 
 @Component({
   selector: 'app-user-rights',
   templateUrl: './user-rights.component.html',
   styleUrls: ['./user-rights.component.scss']
 })
-export class UserRightsComponent implements OnInit {
+export class UserRightsComponent implements AfterViewInit {
 
-  constructor() { }
+  @ViewChild(RightsGridComponent) grid: RightsGridComponent
 
-  ngOnInit() {
+  constructor(private service: RightsService) { }
+
+  ngAfterViewInit() {
+    this.service.userRights.subscribe(rights => this.grid.setData(rights))
   }
 
 }

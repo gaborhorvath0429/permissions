@@ -1,27 +1,34 @@
 .grid-container {
   display: grid;
   grid-template-areas:
-    'groups groups users group-rights'
-    'groups groups users user-rights';
+    'groups users group-rights'
+    'groups users user-rights';
   grid-gap: 1rem;
   padding: 0 0.5rem;
 }
 
-
 app-groups {
-  height: 96vh;
+  padding: 0 0.5rem;
+  height: 100vh;
+  width: 20vw;
   grid-area: groups;
 }
 
 app-users {
-  height: 96vh;
+  padding: 0 0.5rem;
+  height: 100vh;
+  width: 15vw;
   grid-area: users;
 }
 
 app-group-rights {
-  grid-area: group-rights
+  padding: 0 0.5rem;
+  width: 58vw;
+  grid-area: group-rights;
 }
 
 app-user-rights {
-  grid-area: user-rights
+  padding: 0 0.5rem;
+  width: 58vw;
+  grid-area: user-rights;
 }
