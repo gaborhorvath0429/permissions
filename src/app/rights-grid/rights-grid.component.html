@@ -1,0 +1,66 @@
+<mat-form-field>
+    <input matInput placeholder="Name Filter" (keyup)="applyFilter($event.target.value, 'name')">
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [aria-label]="checkboxLabel()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                        [aria-label]="checkboxLabel(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+    <ng-container matColumnDef="system">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> System </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.system}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Right Name </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ticket">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Ticket </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.ticket}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="creator">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Creator </th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.creator}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created At </th>
+        <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.createdAt}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="expireAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Expire At </th>
+        <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.expireAt}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
+        <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.description}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+    </tr>
+  </table>
+
+  <mat-paginator [pageSize]="5"></mat-paginator>
+</div>

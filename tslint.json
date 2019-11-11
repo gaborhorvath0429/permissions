@@ -4,6 +4,12 @@
     "codelyzer"
   ],
   "rules": {
+    "no-string-literal": false,
+    "no-non-null-assertion": false,
+    "indent": false,
+    "curly": false,
+    "forin": false,
+    "prefer-const": false,
     "array-type": false,
     "arrow-parens": false,
     "deprecation": {
@@ -45,7 +51,6 @@
       true,
       "ignore-params"
     ],
-    "no-non-null-assertion": true,
     "no-redundant-jsdoc": true,
     "no-switch-case-fall-through": true,
     "no-use-before-declare": true,
@@ -70,6 +75,10 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true
+    "directive-class-suffix": true,
+    "semicolon": [
+      true,
+      "never"
+    ]
   }
 }

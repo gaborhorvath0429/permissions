@@ -1,0 +1,27 @@
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'groups groups users group-rights'
+    'groups groups users user-rights';
+  grid-gap: 1rem;
+  padding: 0 0.5rem;
+}
+
+
+app-groups {
+  height: 96vh;
+  grid-area: groups;
+}
+
+app-users {
+  height: 96vh;
+  grid-area: users;
+}
+
+app-group-rights {
+  grid-area: group-rights
+}
+
+app-user-rights {
+  grid-area: user-rights
+}
