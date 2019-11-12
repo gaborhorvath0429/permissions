@@ -14,7 +14,7 @@ export class GroupRightsComponent implements AfterViewInit {
   constructor(private service: RightsService) { }
 
   ngAfterViewInit(): void {
-
+    this.service.groupRights.subscribe(rights => this.grid.setData(rights))
   }
 
 }

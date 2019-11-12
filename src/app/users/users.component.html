@@ -1,12 +1,11 @@
 <div class="users">
-  <mat-toolbar>
+  <mat-toolbar color="primary">
     <span>Users</span>
   </mat-toolbar>
   <mat-form-field>
     <input matInput placeholder="Search">
   </mat-form-field>
   <mat-action-list>
-      <button mat-list-item (click)="getUserRights()"> Feri </button>
-      <button mat-list-item (click)="getUserRights()"> Dezső </button>
+      <button mat-list-item *ngFor="let user of users" (click)="getUserRights(user.opid)"> {{ user.name }} </button>
     </mat-action-list>
 </div>

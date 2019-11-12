@@ -6,4 +6,15 @@
   mat-form-field {
     width: 100%;
   }
+
+  .groups-tree-invisible {
+    display: none;
+  }
+
+  .groups-tree ul,
+  .groups-tree li {
+    margin-top: 0;
+    margin-bottom: 0;
+    list-style-type: none;
+  }
 }

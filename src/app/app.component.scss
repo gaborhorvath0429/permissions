@@ -3,11 +3,13 @@
   grid-template-areas:
     'groups users group-rights'
     'groups users user-rights';
-  grid-gap: 1rem;
-  padding: 0 0.5rem;
+  grid-gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
 }
 
 app-groups {
+  overflow-y: scroll;
+  overflow-x: auto;
   padding: 0 0.5rem;
   height: 100vh;
   width: 20vw;
@@ -15,20 +17,21 @@ app-groups {
 }
 
 app-users {
+  overflow-y: scroll;
   padding: 0 0.5rem;
   height: 100vh;
-  width: 15vw;
+  width: 12vw;
   grid-area: users;
 }
 
 app-group-rights {
   padding: 0 0.5rem;
-  width: 58vw;
+  width: 63vw;
   grid-area: group-rights;
 }
 
 app-user-rights {
   padding: 0 0.5rem;
-  width: 58vw;
+  width: 63vw;
   grid-area: user-rights;
 }

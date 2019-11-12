@@ -3,14 +3,15 @@ import { NgModule } from '@angular/core'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { HttpClientModule } from '@angular/common/http'
 import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
-  MatSortModule, MatTableModule, MatCheckboxModule, MatToolbarModule, MatListModule } from '@angular/material'
+  MatSortModule, MatTableModule, MatCheckboxModule, MatToolbarModule, MatListModule,
+  MatTreeModule, MatIconModule, MatButtonModule } from '@angular/material'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
-import { RightsGridComponent } from './rights-grid/rights-grid.component';
-import { GroupRightsComponent } from './group-rights/group-rights.component';
-import { UserRightsComponent } from './user-rights/user-rights.component';
-import { UsersComponent } from './users/users.component';
+import { RightsGridComponent } from './rights-grid/rights-grid.component'
+import { GroupRightsComponent } from './group-rights/group-rights.component'
+import { UserRightsComponent } from './user-rights/user-rights.component'
+import { UsersComponent } from './users/users.component'
 import { GroupsComponent } from './groups/groups.component'
 
 @NgModule({
@@ -36,7 +37,10 @@ import { GroupsComponent } from './groups/groups.component'
     MatProgressSpinnerModule,
     MatCheckboxModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    MatTreeModule,
+    MatIconModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

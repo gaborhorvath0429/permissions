@@ -13,7 +13,7 @@ export class UserRightsComponent implements AfterViewInit {
 
   constructor(private service: RightsService) { }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.service.userRights.subscribe(rights => this.grid.setData(rights))
   }
 
