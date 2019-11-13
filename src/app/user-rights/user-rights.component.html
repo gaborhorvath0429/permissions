@@ -1,6 +1,7 @@
 <div class="user-rights">
   <mat-toolbar color="primary">
     <span>User rights</span>
+    <span [hidden]="!selectedUserName" style="padding-left: 8px">for {{ selectedUserName }}</span>
   </mat-toolbar>
-  <app-rights-grid></app-rights-grid>
+  <app-rights-grid (save)="showSaveDialog($event)"></app-rights-grid>
 </div>

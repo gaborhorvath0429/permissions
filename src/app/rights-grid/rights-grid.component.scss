@@ -2,10 +2,53 @@ table {
   width: 100%;
 }
 
-.mat-form-field {
-  width: 100%;
+.filter {
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  h3 {
+    margin-right: 20px;
+  }
 }
 
 td, th {
   width: 14%;
+}
+
+mat-radio-button {
+  padding: 25px 10px;
+}
+
+.rights-grid-container {
+  height: 360px;
+  overflow: auto;
+}
+
+.buttons {
+  padding: 10px;
+}
+
+.filter-button {
+  padding: 9px;
+}
+
+.checkbox-cell, .checkbox-header {
+  text-align: right;
+}
+
+mat-toolbar {
+  bottom: 0px;
+  position: sticky;
+  z-index: 10;
+  display: flex;
+  background-color: white;
+  mat-paginator {
+    margin-left: auto;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .filter {
+    height: 120px;
+  }
 }

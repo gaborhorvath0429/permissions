@@ -3,7 +3,7 @@
     <span>Groups</span>
   </mat-toolbar>
   <mat-form-field>
-    <input matInput placeholder="Search">
+    <input matInput placeholder="Search" (input)="search($event.target.value)">
   </mat-form-field>
 
   <mat-tree [dataSource]="groups" [treeControl]="treeControl" class="groups-tree">
@@ -12,7 +12,7 @@
         <li class="mat-tree-node">
           <!-- use a disabled button to provide padding for tree leaf -->
           <button mat-icon-button disabled></button>
-          <button mat-button (click)="handleGroupClick(node.name)">{{node.name}}</button>
+          <button mat-button (click)="handleGroupClick(node)">{{node.name}}</button>
         </li>
       </mat-tree-node>
       <!-- This is the tree node template for expandable nodes -->
@@ -25,7 +25,7 @@
                 {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
               </mat-icon>
             </button>
-            <button mat-button (click)="handleGroupClick(node.name)">{{node.name}}</button>
+            <button mat-button (click)="handleGroupClick(node)">{{node.name}}</button>
           </div>
           <ul [class.groups-tree-invisible]="!treeControl.isExpanded(node)">
             <ng-container matTreeNodeOutlet></ng-container>

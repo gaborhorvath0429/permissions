@@ -1,4 +1,4 @@
-import { RightData } from './../rights-grid/rights-grid.component'
+import { RightData, System } from './../rights-grid/rights-grid.component'
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { BehaviorSubject, of, Observable } from 'rxjs'
@@ -21,7 +21,18 @@ export class RightsService {
   public userRights = new BehaviorSubject<RightData[]>([])
   public groupRights = new BehaviorSubject<RightData[]>([])
 
+  public selectedUser = new BehaviorSubject<string>('')
+  public selectedGroup = new BehaviorSubject<string>('')
+
   constructor(private http: HttpClient) { }
+
+  public getSystems(): Observable<System[]> {
+    return of([
+      { id: '1', name: 'KSI Kollecto' },
+      { id: '2', name: 'Faktor Kollecto' },
+      { id: '3', name: 'I3 (core)' }
+    ])
+  }
 
   public getGroups(): Observable<TreeNode[]> {
     return of([
@@ -53,7 +64,7 @@ export class RightsService {
     ])
   }
 
-  public getUsers(group: string): void {
+  public getUsers(group: TreeNode): void {
     this.users.next([
       { name: 'Jóska', opid: 'joska' },
       { name: 'Feri', opid: 'feri' },
@@ -62,11 +73,14 @@ export class RightsService {
     ])
   }
 
-  public getUserRights(opid: string): void {
+  public getUserRights(user: UserData): void {
+    this.selectedUser.next(user.name)
     let data = []
     for (let i = 0; i < 500; i++) {
       data.push({
-        system: 'asd',
+        id: i,
+        allocated: '1',
+        system: 'KSI Kollecto',
         name: 'dsgsdg',
         ticket: '4364',
         creator: 'SADG SADgdsh',
@@ -78,11 +92,14 @@ export class RightsService {
     this.userRights.next(data)
   }
 
-  public getGroupRights(groupName: string): void {
+  public getGroupRights(group: TreeNode): void {
+    this.selectedGroup.next(group.name)
     let data = []
     for (let i = 0; i < 500; i++) {
       data.push({
-        system: 'hfgj',
+        id: i,
+        allocated: '0',
+        system: 'Faktor Kollecto',
         name: 'bvnvbn',
         ticket: '658',
         creator: 'fgj fjg',

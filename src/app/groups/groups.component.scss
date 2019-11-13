@@ -11,10 +11,13 @@
     display: none;
   }
 
-  .groups-tree ul,
-  .groups-tree li {
-    margin-top: 0;
-    margin-bottom: 0;
-    list-style-type: none;
+  .groups-tree {
+    min-width: 800px;
+    ul, li {
+      margin-top: 0;
+      margin-bottom: 0;
+      list-style-type: none;
+      overflow: visible !important;
+    }
   }
 }

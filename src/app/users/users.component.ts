@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core'
 export class UsersComponent implements OnInit {
 
   users: UserData[] = []
+  search = ''
 
   constructor(private service: RightsService) { }
 
@@ -16,8 +17,8 @@ export class UsersComponent implements OnInit {
     this.service.users.subscribe(users => this.users = users)
   }
 
-  getUserRights(opid: string) {
-    this.service.getUserRights(opid)
+  getUserRights(user: UserData) {
+    this.service.getUserRights(user)
   }
 
 }

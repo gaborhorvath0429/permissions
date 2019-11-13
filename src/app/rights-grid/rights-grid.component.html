@@ -1,68 +1,97 @@
-<mat-form-field>
-    <input matInput placeholder="Name Filter" (keyup)="applyFilter($event.target.value, 'name')">
-</mat-form-field>
+<div class="filter">
+  <h3>Filter</h3>
+  <div class="filter-fields">
+    <mat-form-field>
+      <mat-label>System</mat-label>
+      <mat-select (selectionChange)="applyFilter($event, 'system')" value="all" #filter>
+        <mat-option value="all">All</mat-option>
+        <mat-option *ngFor="let system of systems" [value]="system.id">
+          {{ system.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <input matInput placeholder="Right name" (keyup)="applyFilter($event.target.value, 'name')" #filter>
+    </mat-form-field>
+  </div>
+  <div class="radio-filters">
+    <mat-radio-group (change)="applyFilter($event, 'allocated')">
+      <mat-radio-button color="primary" value="all" checked>All</mat-radio-button>
+      <mat-radio-button color="primary" value="1">Allocated</mat-radio-button>
+      <mat-radio-button color="primary" value="0">Unallocated</mat-radio-button>
+    </mat-radio-group>
+  </div>
+  <div class="buttons">
+    <button class="filter-button" mat-button>Settings</button>
+    <button class="filter-button" (click)="clearFilters()" mat-button>Clear</button>
+  </div>
+</div>
 
-<div class="mat-elevation-z8">
+<div class="rights-grid-container mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
-
     <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
+      <th class="checkbox-header" mat-header-cell *matHeaderCellDef>
           <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()"
-                        [aria-label]="checkboxLabel()"
-                        color="primary">
-          </mat-checkbox> -->
-        </th>
-        <td mat-cell *matCellDef="let row">
-          <mat-checkbox (click)="$event.stopPropagation()"
-                        (change)="$event ? selection.toggle(row) : null"
-                        [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)"
-                        color="primary">
-          </mat-checkbox>
-        </td>
-      </ng-container>
+          [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()"
+          [aria-label]="checkboxLabel()"
+          color="primary">
+        </mat-checkbox> -->
+        Allocated
+      </th>
+      <td class="checkbox-cell" mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? checkRow($event, row) : null"
+                      [checked]="selection.isSelected(row)"
+                      [aria-label]="checkboxLabel(row)"
+                      color="primary">
+        </mat-checkbox>
+      </td>
+    </ng-container>
 
     <ng-container matColumnDef="system">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> System </th>
-      <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.system}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.system}} </td>
     </ng-container>
 
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Right Name </th>
-      <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.name}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.name}} </td>
     </ng-container>
 
     <ng-container matColumnDef="ticket">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Ticket </th>
-      <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.ticket}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.ticket}} </td>
     </ng-container>
 
     <ng-container matColumnDef="creator">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Creator </th>
-      <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.creator}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.creator}} </td>
     </ng-container>
 
     <ng-container matColumnDef="createdAt">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Created At </th>
-        <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.createdAt}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.createdAt}} </td>
     </ng-container>
 
     <ng-container matColumnDef="expireAt">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Expire At </th>
-        <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.expireAt}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.expireAt}} </td>
     </ng-container>
 
     <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Description </th>
-        <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.description}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.description}} </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-    </tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.backgroundColor]="row.color"></tr>
   </table>
 
-  <mat-paginator [pageSize]="5"></mat-paginator>
+  <mat-toolbar [style.display]="dataSource.data.length ? 'block' : 'none'">
+    <mat-toolbar-row>
+      <button class="save-button" *ngIf="modified.length" (click)="save.emit(modified)" mat-button>Save</button>
+      <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    </mat-toolbar-row>
+  </mat-toolbar>
 </div>

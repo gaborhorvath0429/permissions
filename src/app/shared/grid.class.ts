@@ -1,6 +1,7 @@
-import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material'
+import { MatTableDataSource, MatPaginator, MatSort, MatRadioButton, MatSelect } from '@angular/material'
 import { SelectionModel } from '@angular/cdk/collections'
 import { ViewChild } from '@angular/core'
+import * as _ from 'lodash'
 
 export default class GridComponent {
   dataSource: MatTableDataSource<any>
@@ -11,6 +12,7 @@ export default class GridComponent {
   @ViewChild(MatSort) sort: MatSort
 
   setDataSource(dataSource: any) {
+    const filterClone = this.dataSource ? _.clone(this.dataSource.filter) : '{}'
     this.dataSource = dataSource
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort
@@ -19,8 +21,9 @@ export default class GridComponent {
 
       return Object.keys(parsedFilters)
         .map(column => data[column].toLowerCase().includes(parsedFilters[column].toLowerCase()))
-        .reduce((acc: boolean, curr: boolean) => (acc = curr) && acc, true)
+        .every(Boolean)
     }
+    this.dataSource.filter = filterClone
   }
 
   isAllSelected() {
@@ -42,7 +45,16 @@ export default class GridComponent {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`
   }
 
-  applyFilter(filterValue: string, column: string) {
+  applyFilter(filterValue: any, column: string) {
+    if (filterValue.source) {
+      if (filterValue.source instanceof MatSelect) {
+        filterValue = filterValue.source.selected.viewValue
+        if (filterValue === 'All') filterValue = ''
+      } else if (filterValue.source instanceof MatRadioButton) {
+        filterValue = filterValue.value
+        if (filterValue === 'all') filterValue = ''
+      }
+    }
     this.filter = {
       ...this.filter,
       [column]: filterValue

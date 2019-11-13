@@ -3,9 +3,9 @@
     <span>Users</span>
   </mat-toolbar>
   <mat-form-field>
-    <input matInput placeholder="Search">
+    <input matInput placeholder="Search" [(ngModel)]="search">
   </mat-form-field>
   <mat-action-list>
-      <button mat-list-item *ngFor="let user of users" (click)="getUserRights(user.opid)"> {{ user.name }} </button>
+      <button mat-list-item *ngFor="let user of users | userSearch:search" (click)="getUserRights(user)"> {{ user.name }} </button>
     </mat-action-list>
 </div>
