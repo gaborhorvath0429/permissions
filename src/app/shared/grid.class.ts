@@ -11,7 +11,7 @@ export default class GridComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator
   @ViewChild(MatSort) sort: MatSort
 
-  setDataSource(dataSource: any) {
+  setDataSource(dataSource: any): void {
     const filterClone = this.dataSource ? _.clone(this.dataSource.filter) : '{}'
     this.dataSource = dataSource
     this.dataSource.paginator = this.paginator
@@ -26,13 +26,13 @@ export default class GridComponent {
     this.dataSource.filter = filterClone
   }
 
-  isAllSelected() {
+  isAllSelected(): boolean {
     const numSelected = this.selection.selected.length
     const numRows = this.dataSource.data.length
     return numSelected === numRows
   }
 
-  masterToggle() {
+  masterToggle(): void {
     this.isAllSelected() ?
         this.selection.clear() :
         this.dataSource.data.forEach(row => this.selection.select(row))
@@ -45,7 +45,7 @@ export default class GridComponent {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`
   }
 
-  applyFilter(filterValue: any, column: string) {
+  applyFilter(filterValue: any, column: string): void {
     if (filterValue.source) {
       if (filterValue.source instanceof MatSelect) {
         filterValue = filterValue.source.selected.viewValue

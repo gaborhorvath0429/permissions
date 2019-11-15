@@ -1,11 +1,15 @@
-import { RightData, System } from './../rights-grid/rights-grid.component'
+import { RightData, System, ModifiedRight } from './../rights-grid/rights-grid.component'
 import { Injectable } from '@angular/core'
-import { HttpClient } from '@angular/common/http'
 import { BehaviorSubject, of, Observable } from 'rxjs'
-
-export interface TreeNode {
-  name: string
-  children?: TreeNode[]
+import { GroupService, UserService } from '../backend'
+import { map } from 'rxjs/operators'
+import * as _ from 'lodash'
+export interface GroupNode {
+  groupId: number
+  groupName: string
+  creationDate: string
+  parentGroupId?: number
+  children?: GroupNode[]
 }
 
 export interface UserData {
@@ -21,10 +25,13 @@ export class RightsService {
   public userRights = new BehaviorSubject<RightData[]>([])
   public groupRights = new BehaviorSubject<RightData[]>([])
 
-  public selectedUser = new BehaviorSubject<string>('')
-  public selectedGroup = new BehaviorSubject<string>('')
+  public selectedUser: UserData | { name: string } = { name: '' }
+  public selectedGroup: GroupNode | { groupName: string } = { groupName: '' }
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private groupService: GroupService,
+    private userService: UserService
+  ) { }
 
   public getSystems(): Observable<System[]> {
     return of([
@@ -34,37 +41,39 @@ export class RightsService {
     ])
   }
 
-  public getGroups(): Observable<TreeNode[]> {
-    return of([
-      {
-        name: 'Fruit',
-        children: [
-          {name: 'Apple'},
-          {name: 'Banana'},
-          {name: 'Fruit loops'},
-        ]
-      }, {
-        name: 'Vegetables',
-        children: [
-          {
-            name: 'Green',
-            children: [
-              {name: 'Broccoli'},
-              {name: 'Brussel sprouts'},
-            ]
-          }, {
-            name: 'Orange',
-            children: [
-              {name: 'Pumpkins'},
-              {name: 'Carrots'},
-            ]
-          },
-        ]
-      },
-    ])
+  private transformToTree(arr: GroupNode[]): GroupNode[] {
+    let nodes = {}
+    return arr.filter(obj => {
+        let id = obj.groupId
+        let parentId = obj['parentGroupId']
+
+        nodes[id] = _.defaults(obj, nodes[id], { children: [] })
+        if (parentId) (nodes[parentId] = (nodes[parentId] || { children: [] }))['children'].push(obj)
+
+        return !parentId
+    })
+}
+
+  public getGroups(): Observable<GroupNode[]> {
+    // this.groupService.getGroups().subscribe(data => console.log(data))
+
+    let groups = [
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 1, groupName: 'group1', parentGroupId : 0 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 2, groupName: 'group2', parentGroupId : 0 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 3, groupName: 'group3', parentGroupId : 1 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 4, groupName: 'group4', parentGroupId : 1 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 5, groupName: 'group5', parentGroupId : 2 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 6, groupName: 'group6', parentGroupId : 2 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 7, groupName: 'group7', parentGroupId : 3 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 8, groupName: 'group8', parentGroupId : 7 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 9, groupName: 'group9', parentGroupId : 5 },
+      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 10, groupName: 'group10', parentGroupId : 6 }
+    ]
+
+    return of(this.transformToTree(groups))
   }
 
-  public getUsers(group: TreeNode): void {
+  public getUsers(group: GroupNode): void {
     this.users.next([
       { name: 'Jóska', opid: 'joska' },
       { name: 'Feri', opid: 'feri' },
@@ -74,7 +83,7 @@ export class RightsService {
   }
 
   public getUserRights(user: UserData): void {
-    this.selectedUser.next(user.name)
+    this.selectedUser = user
     let data = []
     for (let i = 0; i < 500; i++) {
       data.push({
@@ -83,17 +92,17 @@ export class RightsService {
         system: 'KSI Kollecto',
         name: 'dsgsdg',
         ticket: '4364',
-        creator: 'SADG SADgdsh',
-        createdAt: '2019-01-01',
-        expireAt: '2019-12-31',
-        description: '436437redhf'
+        createdBy: 'SADG SADgdsh',
+        creationDate: '2019-01-01',
+        expiration: '2019-12-31',
+        rightDescription: '436437redhf'
       })
     }
     this.userRights.next(data)
   }
 
-  public getGroupRights(group: TreeNode): void {
-    this.selectedGroup.next(group.name)
+  public getGroupRights(group: GroupNode): void {
+    this.selectedGroup = group
     let data = []
     for (let i = 0; i < 500; i++) {
       data.push({
@@ -102,12 +111,32 @@ export class RightsService {
         system: 'Faktor Kollecto',
         name: 'bvnvbn',
         ticket: '658',
-        creator: 'fgj fjg',
-        createdAt: '2019-02-01',
-        expireAt: '2019-11-31',
-        description: 'dfhfgh'
+        createdBy: 'fgj fjg',
+        creationDate: '2019-02-01',
+        expiration: '2019-11-31',
+        rightDescription: 'dfhfgh'
       })
     }
     this.groupRights.next(data)
+  }
+
+  public allocateRightForGroup(right: RightData, fields: any): void {
+    let group = this.selectedGroup
+    console.log('ALLOCATING', right)
+  }
+
+  public unAllocateRightForGroup(right: RightData, fields: any): void {
+    let group = this.selectedGroup
+    console.log('UNALLOCATING', right)
+  }
+
+  public allocateRightForUser(right: RightData, fields: any): void {
+    let user = this.selectedUser
+    console.log('ALLOCATING', right)
+  }
+
+  public unAllocateRightForUser(right: RightData, fields: any): void {
+    let user = this.selectedUser
+    console.log('UNALLOCATING', right)
   }
 }

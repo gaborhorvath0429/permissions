@@ -3,7 +3,7 @@ import { Component, ViewChild, AfterViewInit } from '@angular/core'
 import { RightsService } from '../services/rights.service'
 import { MatDialog } from '@angular/material'
 import { SaveDialogComponent } from '../save-dialog/save-dialog.component'
-
+import * as moment from 'moment'
 @Component({
   selector: 'app-group-rights',
   templateUrl: './group-rights.component.html',
@@ -11,15 +11,16 @@ import { SaveDialogComponent } from '../save-dialog/save-dialog.component'
 })
 export class GroupRightsComponent implements AfterViewInit {
 
-  selectedGroupName = ''
-
   @ViewChild(RightsGridComponent) grid: RightsGridComponent
 
   constructor(private service: RightsService, public dialog: MatDialog) { }
 
   ngAfterViewInit(): void {
     this.service.groupRights.subscribe(rights => this.grid.setData(rights))
-    this.service.selectedGroup.subscribe(name => this.selectedGroupName = name)
+  }
+
+  get selectedGroupName(): string {
+    return this.service.selectedGroup.groupName
   }
 
   showSaveDialog(modified: ModifiedRight): void {
@@ -30,11 +31,14 @@ export class GroupRightsComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return
-      if (result.expiration && result.expiration._i) {
-        let fields = result.expiration._i
-        result.expiration = fields.year + '-' + fields.month + '-' + fields.date
-      }
-      console.log(result)
+      let { fields, allocated, unallocated } = result
+      if (fields.expiration) fields.expiration = moment(fields.expiration).format('YYYY-MM-DD')
+      allocated.forEach((allocatedRight: ModifiedRight) => {
+        this.service.allocateRightForGroup(allocatedRight.right, fields)
+      })
+      unallocated.forEach((unallocatedRight: ModifiedRight) => {
+        this.service.unAllocateRightForGroup(unallocatedRight.right, fields)
+      })
     })
   }
 }

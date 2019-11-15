@@ -2,8 +2,10 @@ import { Component, OnInit, Output, EventEmitter, ViewChildren, ViewChild, Query
 import { MatTableDataSource } from '@angular/material/table'
 import GridComponent from '../shared/grid.class'
 import { RightsService } from '../services/rights.service'
-import { MatCheckboxChange, MatRadioGroup, MatSelect } from '@angular/material'
+import { MatCheckboxChange, MatRadioGroup, MatSelect, MatDialog } from '@angular/material'
+import { SettingsDialogComponent } from '../settings-dialog/settings-dialog.component'
 import * as _ from 'lodash'
+import * as moment from 'moment'
 
 export interface RightData {
   id: number
@@ -11,10 +13,10 @@ export interface RightData {
   system: string
   name: string
   ticket: string
-  creator: string
-  createdAt: string
-  expireAt: string
-  description: string
+  createdBy: string
+  creationDate: string
+  expiration: string
+  rightDescription: string
   color?: string
 }
 
@@ -28,22 +30,37 @@ export interface ModifiedRight {
   right: RightData
 }
 
+export interface FilterSettings {
+  ticket?: string
+  createdBy?: string
+  creationDate?: string
+  expiration?: string
+  rightDescription?: string
+}
+
 @Component({
   selector: 'app-rights-grid',
   templateUrl: './rights-grid.component.html',
   styleUrls: ['./rights-grid.component.scss']
 })
 export class RightsGridComponent extends GridComponent implements OnInit {
-  displayedColumns: string[] = ['system', 'name', 'ticket', 'creator', 'createdAt', 'expireAt', 'description', 'select']
+  displayedColumns: string[] = ['system', 'name', 'ticket', 'createdBy', 'creationDate', 'expiration', 'rightDescription', 'select']
   systems: System[] = []
   modified: ModifiedRight[] = []
+  filterSettings: FilterSettings = {
+    ticket: '',
+    createdBy: '',
+    creationDate: '',
+    expiration: '',
+    rightDescription: ''
+  }
 
   @Output() save = new EventEmitter<ModifiedRight>()
 
   @ViewChild(MatRadioGroup) radioGroup: MatRadioGroup
   @ViewChildren('filter') filterFields: QueryList<ElementRef>
 
-  constructor(private service: RightsService) { super() }
+  constructor(private service: RightsService, public dialog: MatDialog) { super() }
 
   ngOnInit(): void {
     this.setData([])
@@ -58,6 +75,21 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     })
   }
 
+  showSettingsDialog(): void {
+    const dialogRef = this.dialog.open(SettingsDialogComponent, {
+      width: '270px',
+      data: this.filterSettings
+    })
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return
+      if (result.expiration) result.expiration = moment(result.expiration).format('YYYY-MM-DD')
+      if (result.creationDate) result.creationDate = moment(result.creationDate).format('YYYY-MM-DD')
+
+      Object.keys(result).forEach(key => this.applyFilter(result[key], key))
+    })
+  }
+
   clearFilters(): void {
     this.filterFields.forEach(field => {
       if (field instanceof MatSelect) {
@@ -66,6 +98,13 @@ export class RightsGridComponent extends GridComponent implements OnInit {
         field.nativeElement.value = ''
       }
     })
+    this.filterSettings = {
+      ticket: '',
+      createdBy: '',
+      creationDate: '',
+      expiration: '',
+      rightDescription: ''
+    }
     this.radioGroup.value = 'all'
     this.filter = {}
     this.dataSource.filter = '{}'

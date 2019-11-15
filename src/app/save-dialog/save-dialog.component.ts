@@ -24,19 +24,27 @@ export class SaveDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<SaveDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private service: RightsService
   ) {}
 
   ngOnInit(): void {
     switch (this.data.type) {
       case 'user':
-        this.service.selectedUser.subscribe(user => this.selected = user)
+        this.selected = this.service.selectedUser.name
         break
       case 'group':
-        this.service.selectedGroup.subscribe(group => this.selected = group)
+        this.selected = this.service.selectedGroup.groupName
         break
     }
+  }
+
+  get allocated(): ModifiedRight[] {
+    return this.data.modified.filter(right => right.type === 'allocated')
+  }
+
+  get unallocated(): ModifiedRight[] {
+    return this.data.modified.filter(right => right.type === 'unallocated')
   }
 
   onCancelClick(): void {

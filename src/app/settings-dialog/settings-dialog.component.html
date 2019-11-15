@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Filter settings</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput placeholder="Ticket" [(ngModel)]="fields.ticket">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Created by" [(ngModel)]="fields.createdBy">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [matDatepicker]="pickerCreation" placeholder="Creation Date" [(ngModel)]="fields.creationDate">
+    <mat-datepicker-toggle matSuffix [for]="pickerCreation"></mat-datepicker-toggle>
+    <mat-datepicker #pickerCreation></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [matDatepicker]="pickerExpiration" placeholder="Expiration Date" [(ngModel)]="fields.expiration">
+    <mat-datepicker-toggle matSuffix [for]="pickerExpiration"></mat-datepicker-toggle>
+    <mat-datepicker #pickerExpiration></mat-datepicker>
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput placeholder="Description" [(ngModel)]="fields.rightDescription">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="fields">Save</button>
+</div>

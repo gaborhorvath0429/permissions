@@ -11,15 +11,16 @@ import { SaveDialogComponent } from '../save-dialog/save-dialog.component'
 })
 export class UserRightsComponent implements AfterViewInit {
 
-  selectedUserName = ''
-
   @ViewChild(RightsGridComponent) grid: RightsGridComponent
 
   constructor(private service: RightsService, public dialog: MatDialog) { }
 
   ngAfterViewInit(): void {
     this.service.userRights.subscribe(rights => this.grid.setData(rights))
-    this.service.selectedUser.subscribe(name => this.selectedUserName = name)
+  }
+
+  get selectedUserName(): string {
+    return this.service.selectedUser.name
   }
 
   showSaveDialog(modified: ModifiedRight): void {
@@ -30,11 +31,17 @@ export class UserRightsComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return
-      if (result.expiration && result.expiration._i) {
-        let fields = result.expiration._i
-        result.expiration = fields.year + '-' + fields.month + '-' + fields.date
+      let { fields, allocated, unallocated } = result
+      if (fields.expiration && fields.expiration._i) {
+        let dateFields = fields.expiration._i
+        fields.expiration = dateFields.year + '-' + dateFields.month + '-' + dateFields.date
       }
-      console.log(result)
+      allocated.forEach((allocatedRight: ModifiedRight) => {
+        this.service.allocateRightForUser(allocatedRight.right, fields)
+      })
+      unallocated.forEach((unallocatedRight: ModifiedRight) => {
+        this.service.unAllocateRightForUser(unallocatedRight.right, fields)
+      })
     })
   }
 }

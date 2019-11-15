@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core'
-import { RightsService, TreeNode } from '../services/rights.service'
-import { MatTreeNestedDataSource, MatIconRegistry } from '@angular/material'
+import { RightsService, GroupNode } from '../services/rights.service'
+import { MatTreeNestedDataSource } from '@angular/material'
 import { NestedTreeControl } from '@angular/cdk/tree'
 import * as _ from 'lodash'
 @Component({
@@ -10,10 +10,10 @@ import * as _ from 'lodash'
 })
 export class GroupsComponent implements OnInit {
 
-  treeControl = new NestedTreeControl<TreeNode>(node => node.children)
-  clonedTree: TreeNode[]
-  groups = new MatTreeNestedDataSource<TreeNode>()
-  hasChild = (index: number, node: TreeNode) => !!node.children && node.children.length > 0
+  treeControl = new NestedTreeControl<GroupNode>(node => node.children)
+  clonedTree: GroupNode[]
+  groups = new MatTreeNestedDataSource<GroupNode>()
+  hasChild = (index: number, node: GroupNode) => !!node.children && node.children.length > 0
 
   constructor(private service: RightsService) { }
 
@@ -25,7 +25,7 @@ export class GroupsComponent implements OnInit {
     })
   }
 
-  handleGroupClick(group: TreeNode): void {
+  handleGroupClick(group: GroupNode): void {
     this.service.getUsers(group)
     this.service.getGroupRights(group)
   }
@@ -38,19 +38,19 @@ export class GroupsComponent implements OnInit {
     value ? this.treeControl.expandAll() : this.treeControl.collapseAll()
   }
 
-  recursiveNodeEliminator(tree: TreeNode[], search: string): boolean {
+  recursiveNodeEliminator(tree: GroupNode[], search: string): boolean {
     for (let index = tree.length - 1; index >= 0; index--) {
       const node = tree[index]
       if (node.children) {
         const parentCanBeEliminated = this.recursiveNodeEliminator(node.children, search)
         if (parentCanBeEliminated) {
-          if (node.name.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) === -1) {
+          if (node.groupName.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) === -1) {
             tree.splice(index, 1)
           }
         }
       } else {
         // Its a leaf node. No more branches.
-        if (node.name.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) === -1) {
+        if (node.groupName.toLocaleLowerCase().indexOf(search.toLocaleLowerCase()) === -1) {
           tree.splice(index, 1)
         }
       }
