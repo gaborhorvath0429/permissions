@@ -78,14 +78,14 @@ export class RightsGridComponent extends GridComponent implements OnInit {
   showSettingsDialog(): void {
     const dialogRef = this.dialog.open(SettingsDialogComponent, {
       width: '270px',
-      data: this.filterSettings
+      data: _.cloneDeep(this.filterSettings)
     })
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return
       if (result.expiration) result.expiration = moment(result.expiration).format('YYYY-MM-DD')
       if (result.creationDate) result.creationDate = moment(result.creationDate).format('YYYY-MM-DD')
-
+      this.filterSettings = result
       Object.keys(result).forEach(key => this.applyFilter(result[key], key))
     })
   }

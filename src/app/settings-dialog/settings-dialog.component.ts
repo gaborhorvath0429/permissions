@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core'
+import { Component, Inject } from '@angular/core'
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog'
 import { FilterSettings } from '../rights-grid/rights-grid.component'
 
@@ -7,14 +7,11 @@ import { FilterSettings } from '../rights-grid/rights-grid.component'
   templateUrl: './settings-dialog.component.html',
   styleUrls: ['./settings-dialog.component.scss']
 })
-export class SettingsDialogComponent implements OnInit {
+export class SettingsDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<SettingsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public fields: FilterSettings
   ) {}
-
-  ngOnInit(): void {
-  }
 
   onCancelClick(): void {
     this.dialogRef.close()
