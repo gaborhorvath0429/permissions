@@ -47,7 +47,19 @@ mat-toolbar {
   }
 }
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1426px) {
+  .filter {
+    height: 120px;
+  }
+}
+
+@media screen and (max-width: 1100px) {
+  mat-radio-button {
+    padding: 10px;
+  }
+}
+
+@media screen and (max-height: 940px) {
   .filter {
     height: 120px;
   }
