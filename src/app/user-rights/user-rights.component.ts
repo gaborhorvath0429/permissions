@@ -1,7 +1,7 @@
 import { RightsService } from './../services/rights.service'
 import { Component, AfterViewInit, ViewChild } from '@angular/core'
 import { RightsGridComponent, ModifiedRight } from '../rights-grid/rights-grid.component'
-import { MatDialog } from '@angular/material'
+import { MatDialog, MatSnackBar } from '@angular/material'
 import { SaveDialogComponent } from '../save-dialog/save-dialog.component'
 
 @Component({
@@ -13,7 +13,11 @@ export class UserRightsComponent implements AfterViewInit {
 
   @ViewChild(RightsGridComponent) grid: RightsGridComponent
 
-  constructor(private service: RightsService, public dialog: MatDialog) { }
+  constructor(
+    private service: RightsService,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngAfterViewInit(): void {
     this.service.userRights.subscribe(rights => this.grid.setData(rights))
@@ -42,6 +46,7 @@ export class UserRightsComponent implements AfterViewInit {
       unallocated.forEach((unallocatedRight: ModifiedRight) => {
         this.service.unAllocateRightForUser(unallocatedRight.right, fields)
       })
+      this.snackBar.open('User permissions have been successfully saved!', '', {duration: 3000})
     })
   }
 }

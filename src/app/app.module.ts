@@ -5,7 +5,8 @@ import { HttpClientModule } from '@angular/common/http'
 import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
   MatSortModule, MatTableModule, MatCheckboxModule, MatToolbarModule, MatListModule,
   MatTreeModule, MatIconModule, MatButtonModule, MatSelectModule, MatRadioModule,
-  MatDialogModule, MatDatepickerModule, MatNativeDateModule, MatExpansionModule } from '@angular/material'
+  MatDialogModule, MatDatepickerModule, MatNativeDateModule,
+  MatSnackBarModule, MatBadgeModule } from '@angular/material'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -18,7 +19,7 @@ import { UserSearchPipe } from './users/user-search.pipe'
 import { SaveDialogComponent } from './save-dialog/save-dialog.component'
 import { MomentDateAdapter } from '@angular/material-moment-adapter'
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material'
-import { ApiModule } from './backend';
+import { ApiModule } from './backend'
 import { SettingsDialogComponent } from './settings-dialog/settings-dialog.component'
 
 const DATE_FORMAT = {
@@ -68,7 +69,9 @@ const DATE_FORMAT = {
     MatRadioModule,
     MatDialogModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSnackBarModule,
+    MatBadgeModule
   ],
   entryComponents: [SaveDialogComponent, SettingsDialogComponent],
   providers: [

@@ -1,7 +1,7 @@
 import { RightsGridComponent, ModifiedRight } from './../rights-grid/rights-grid.component'
 import { Component, ViewChild, AfterViewInit } from '@angular/core'
 import { RightsService } from '../services/rights.service'
-import { MatDialog } from '@angular/material'
+import { MatDialog, MatSnackBar } from '@angular/material'
 import { SaveDialogComponent } from '../save-dialog/save-dialog.component'
 import * as moment from 'moment'
 @Component({
@@ -13,7 +13,11 @@ export class GroupRightsComponent implements AfterViewInit {
 
   @ViewChild(RightsGridComponent) grid: RightsGridComponent
 
-  constructor(private service: RightsService, public dialog: MatDialog) { }
+  constructor(
+    private service: RightsService,
+    public dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) { }
 
   ngAfterViewInit(): void {
     this.service.groupRights.subscribe(rights => this.grid.setData(rights))
@@ -39,6 +43,7 @@ export class GroupRightsComponent implements AfterViewInit {
       unallocated.forEach((unallocatedRight: ModifiedRight) => {
         this.service.unAllocateRightForGroup(unallocatedRight.right, fields)
       })
+      this.snackBar.open('Group permissions have been successfully saved!', '', {duration: 3000})
     })
   }
 }

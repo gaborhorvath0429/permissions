@@ -11,7 +11,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field>
-        <input matInput placeholder="Right name" (keyup)="applyFilter($event.target.value, 'name')" #filter>
+        <input matInput placeholder="Right name" (keyup)="applyFilter($event.target.value, 'name')" #filter #nameFilter>
     </mat-form-field>
   </div>
   <div class="radio-filters">
@@ -22,8 +22,8 @@
     </mat-radio-group>
   </div>
   <div class="buttons">
-    <button class="filter-button" (click)="showSettingsDialog()" mat-button>Settings</button>
-    <button class="filter-button" (click)="clearFilters()" mat-button>Clear</button>
+    <button class="filter-button" (click)="showSettingsDialog()" mat-raised-button>Settings</button>
+    <button class="filter-button" (click)="clearFilters()" mat-raised-button>Clear</button>
   </div>
 </div>
 
@@ -90,7 +90,7 @@
 
   <mat-toolbar [style.display]="dataSource.data.length ? 'block' : 'none'">
     <mat-toolbar-row>
-      <button class="save-button" *ngIf="modified.length" (click)="save.emit(modified)" mat-button>Save</button>
+      <button class="save-button" *ngIf="modified.length" (click)="save.emit(modified)" [matBadge]="modified.length" matBadgeColor="accent" color="primary" mat-raised-button>Save</button>
       <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </mat-toolbar-row>
   </mat-toolbar>

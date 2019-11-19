@@ -28,11 +28,13 @@ app-users {
 app-group-rights {
   padding: 0 0.5rem;
   width: 63vw;
+  height: 49vh;
   grid-area: group-rights;
 }
 
 app-user-rights {
   padding: 0 0.5rem;
   width: 63vw;
+  height: 49vh;
   grid-area: user-rights;
 }
