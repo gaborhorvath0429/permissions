@@ -20,12 +20,14 @@ mat-radio-button {
 }
 
 .rights-grid-container {
+  z-index: 10;
+  position: relative;
   height: 360px;
   overflow: auto;
 }
 
 .buttons {
-  padding: 10px;
+  padding: 5px;
 }
 
 .filter-button {
@@ -34,6 +36,13 @@ mat-radio-button {
 
 .checkbox-cell, .checkbox-header {
   text-align: right;
+}
+
+.no-data {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 mat-toolbar {
@@ -62,5 +71,9 @@ mat-toolbar {
 @media screen and (max-height: 940px) {
   .filter {
     height: 120px;
+  }
+
+  .rights-grid-container {
+    height: 70vh;
   }
 }

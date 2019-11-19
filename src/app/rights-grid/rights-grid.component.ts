@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, ViewChildren, ViewChild, QueryList, ElementRef } from '@angular/core'
+import { Component, OnInit, Output, EventEmitter, ViewChildren, ViewChild, QueryList, ElementRef, Input } from '@angular/core'
 import { MatTableDataSource } from '@angular/material/table'
 import GridComponent from '../shared/grid.class'
 import { RightsService } from '../services/rights.service'
@@ -44,6 +44,7 @@ export interface FilterSettings {
   styleUrls: ['./rights-grid.component.scss']
 })
 export class RightsGridComponent extends GridComponent implements OnInit {
+  screenHeight = window.innerHeight
   displayedColumns: string[] = ['system', 'name', 'ticket', 'createdBy', 'creationDate', 'expiration', 'rightDescription', 'select']
   systems: System[] = []
   modified: ModifiedRight[] = []
@@ -55,6 +56,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     rightDescription: ''
   }
 
+  @Input() type: 'group' | 'user'
   @Output() save = new EventEmitter<ModifiedRight>()
 
   @ViewChild(MatRadioGroup) radioGroup: MatRadioGroup

@@ -3,5 +3,5 @@
     <span>Group rights</span>
     <span [hidden]="!selectedGroupName" style="padding-left: 8px">for {{ selectedGroupName }}</span>
   </mat-toolbar>
-  <app-rights-grid (save)="showSaveDialog($event)"></app-rights-grid>
+  <app-rights-grid type="group" (save)="showSaveDialog($event)"></app-rights-grid>
 </div>

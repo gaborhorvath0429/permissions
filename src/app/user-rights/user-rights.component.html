@@ -3,5 +3,5 @@
     <span>User rights</span>
     <span [hidden]="!selectedUserName" style="padding-left: 8px">for {{ selectedUserName }}</span>
   </mat-toolbar>
-  <app-rights-grid (save)="showSaveDialog($event)"></app-rights-grid>
+  <app-rights-grid type="user" (save)="showSaveDialog($event)"></app-rights-grid>
 </div>
