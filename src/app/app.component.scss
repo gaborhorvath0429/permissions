@@ -46,11 +46,13 @@ app-users {
 }
 
 app-group-rights {
+  width: 64vw;
   padding: 0 0.5rem;
   grid-area: group-rights;
 }
 
 app-user-rights {
+  width: 64vw;
   padding: 0 0.5rem;
   grid-area: user-rights;
 }
