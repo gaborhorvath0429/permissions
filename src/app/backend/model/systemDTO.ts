@@ -10,12 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface User { 
-    active?: number;
-    createdBy?: string;
-    creationDate?: Date;
-    deleted?: number;
-    displayName?: string;
-    userId?: number;
-    userType?: string;
+export interface SystemDTO { 
+    systemDescription?: string;
+    systemId?: string;
 }

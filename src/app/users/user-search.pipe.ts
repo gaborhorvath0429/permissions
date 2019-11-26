@@ -1,17 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { UserData } from '../services/rights.service'
+import { UserDTO } from '../backend'
 
 @Pipe({
   name: 'userSearch'
 })
 export class UserSearchPipe implements PipeTransform {
 
-  transform(array: UserData[], query: string): UserData[] {
+  transform(array: UserDTO[], query: string): UserDTO[] {
     if (!query) {
       return array
     }
     return array.filter(
-      (item: UserData) => item.name.toLowerCase().includes(query.toLowerCase())
+      (item: UserDTO) => item.displayName.toLowerCase().includes(query.toLowerCase())
     )
   }
 

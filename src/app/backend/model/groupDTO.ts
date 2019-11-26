@@ -10,12 +10,10 @@
  * Do not edit the class manually.
  */
 
-export interface Right { 
-    createdBy?: string;
-    creationDate?: Date;
-    expiration?: string;
-    rightDescription?: number;
-    rightId?: number;
-    rightName?: string;
-    system?: string;
+export interface GroupDTO {
+    children?: Array<GroupDTO>;
+    creationDate?: string;
+    groupId?: number;
+    groupName?: string;
+    parentGroupId?: number;
 }

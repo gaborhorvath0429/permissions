@@ -1,51 +1,46 @@
-import { RightData, System, ModifiedRight } from './../rights-grid/rights-grid.component'
 import { Injectable } from '@angular/core'
-import { BehaviorSubject, of, Observable } from 'rxjs'
-import { GroupService, UserService } from '../backend'
+import { BehaviorSubject, Observable } from 'rxjs'
+import { GroupApiControllerService, UserApiControllerService, UserDTO,
+  GroupDTO, SystemDTO, SystemApiControllerService, RightDTO,
+  RightApiControllerService } from '../backend'
 import { map } from 'rxjs/operators'
 import * as _ from 'lodash'
-export interface GroupNode {
-  groupId: number
-  groupName: string
-  creationDate: string
-  parentGroupId?: number
-  children?: GroupNode[]
-}
 
-export interface UserData {
-  opid: string
-  name: string
-}
 @Injectable({
   providedIn: 'root'
 })
 export class RightsService {
 
-  public users = new BehaviorSubject<UserData[]>([])
-  public userRights = new BehaviorSubject<RightData[]>([])
-  public groupRights = new BehaviorSubject<RightData[]>([])
+  public users = new BehaviorSubject<UserDTO[]>([])
+  public userRights = new BehaviorSubject<RightDTO[]>([])
+  public groupRights = new BehaviorSubject<RightDTO[]>([])
+  public rights = new BehaviorSubject<RightDTO[]>([])
 
-  public selectedUser: UserData | { name: string } = { name: '' }
-  public selectedGroup: GroupNode | { groupName: string } = { groupName: '' }
+  public selectedUser: UserDTO | { displayName: string } = { displayName: '' }
+  public selectedGroup: GroupDTO | { groupName: string } = { groupName: '' }
 
   constructor(
-    private groupService: GroupService,
-    private userService: UserService
+    private rightService: RightApiControllerService,
+    private groupService: GroupApiControllerService,
+    private userService: UserApiControllerService,
+    private systemService: SystemApiControllerService
   ) { }
 
-  public getSystems(): Observable<System[]> {
-    return of([
-      { id: '1', name: 'KSI Kollecto' },
-      { id: '2', name: 'Faktor Kollecto' },
-      { id: '3', name: 'I3 (core)' }
-    ])
+  public getRights(): void {
+    this.rightService.getGroupRights1().subscribe((rights: RightDTO[]) => {
+      this.rights.next(rights)
+    })
   }
 
-  private transformToTree(arr: GroupNode[]): GroupNode[] {
+  public getSystems(): Observable<SystemDTO[]> {
+    return this.systemService.getSystems()
+  }
+
+  private transformToTree(arr: GroupDTO[]): GroupDTO[] {
     let nodes = {}
     return arr.filter(obj => {
         let id = obj.groupId
-        let parentId = obj['parentGroupId']
+        let parentId = obj.parentGroupId
 
         nodes[id] = _.defaults(obj, nodes[id], { children: [] })
         if (parentId) (nodes[parentId] = (nodes[parentId] || { children: [] }))['children'].push(obj)
@@ -54,88 +49,65 @@ export class RightsService {
     })
 }
 
-  public getGroups(): Observable<GroupNode[]> {
-    // this.groupService.getGroups().subscribe(data => console.log(data))
-
-    let groups = [
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 1, groupName: 'group1', parentGroupId : 0 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 2, groupName: 'group2', parentGroupId : 0 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 3, groupName: 'group3', parentGroupId : 1 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 4, groupName: 'group4', parentGroupId : 1 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 5, groupName: 'group5', parentGroupId : 2 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 6, groupName: 'group6', parentGroupId : 2 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 7, groupName: 'group7', parentGroupId : 3 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 8, groupName: 'group8', parentGroupId : 7 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 9, groupName: 'group9', parentGroupId : 5 },
-      { creationDate: '2000-01-23T04:56:07.000+00:00', groupId: 10, groupName: 'group10', parentGroupId : 6 }
-    ]
-
-    return of(this.transformToTree(groups))
+  public getGroups(): Observable<GroupDTO[]> {
+    return this.groupService.getGroups().pipe(
+      map((groups: GroupDTO[]): GroupDTO[] => {
+        return this.transformToTree(groups)
+      })
+    )
   }
 
-  public getUsers(group: GroupNode): void {
-    this.users.next([
-      { name: 'Jóska', opid: 'joska' },
-      { name: 'Feri', opid: 'feri' },
-      { name: 'Dezső', opid: 'dezso' },
-      { name: 'Béla', opid: 'bela' }
-    ])
+  public getUsers(group: GroupDTO): void {
+    this.userService.getUsers(group.groupId).subscribe(
+      users => this.users.next(users)
+    )
   }
 
-  public getUserRights(user: UserData): void {
+  public getUserRights(user: UserDTO): void {
     this.selectedUser = user
-    let data = []
-    for (let i = 0; i < 500; i++) {
-      data.push({
-        id: i,
-        allocated: '1',
-        system: 'KSI Kollecto',
-        name: 'dsgsdg',
-        ticket: '4364',
-        createdBy: 'SADG SADgdsh',
-        creationDate: '2019-01-01',
-        expiration: '2019-12-31',
-        rightDescription: '436437redhf'
-      })
-    }
-    this.userRights.next(data)
+    this.userService.getUserRights(user.userId).subscribe((rights: RightDTO[]) => {
+      this.userRights.next(this.getAllocatedRights(rights))
+    })
   }
 
-  public getGroupRights(group: GroupNode): void {
+  public getGroupRights(group: GroupDTO): void {
     this.selectedGroup = group
-    let data = []
-    for (let i = 0; i < 500; i++) {
-      data.push({
-        id: i,
-        allocated: '0',
-        system: 'Faktor Kollecto',
-        name: 'bvnvbn',
-        ticket: '658',
-        createdBy: 'fgj fjg',
-        creationDate: '2019-02-01',
-        expiration: '2019-11-31',
-        rightDescription: 'dfhfgh'
-      })
-    }
-    this.groupRights.next(data)
+    this.groupService.getGroupRights(group.groupId).subscribe((rights: RightDTO[]) => {
+      this.groupRights.next(this.getAllocatedRights(rights))
+    })
   }
 
-  public allocateRightForGroup(right: RightData, fields: any): void {
+  private getAllocatedRights(rights: RightDTO[]): RightDTO[] {
+    let allocated = []
+    this.rights.value.forEach(right => {
+      let allocatedRight = rights.find(e => e.rightId === right.rightId)
+      if (allocatedRight) {
+        allocatedRight.allocated = '1'
+        allocated.push(allocatedRight)
+      } else {
+        right.allocated = '0'
+        allocated.push(right)
+      }
+    })
+    return allocated
+  }
+
+  public allocateRightForGroup(right: RightDTO, fields: any): void {
     let group = this.selectedGroup
     console.log('ALLOCATING', right)
   }
 
-  public unAllocateRightForGroup(right: RightData, fields: any): void {
+  public unAllocateRightForGroup(right: RightDTO, fields: any): void {
     let group = this.selectedGroup
     console.log('UNALLOCATING', right)
   }
 
-  public allocateRightForUser(right: RightData, fields: any): void {
+  public allocateRightForUser(right: RightDTO, fields: any): void {
     let user = this.selectedUser
     console.log('ALLOCATING', right)
   }
 
-  public unAllocateRightForUser(right: RightData, fields: any): void {
+  public unAllocateRightForUser(right: RightDTO, fields: any): void {
     let user = this.selectedUser
     console.log('UNALLOCATING', right)
   }

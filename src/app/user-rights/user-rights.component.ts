@@ -24,7 +24,7 @@ export class UserRightsComponent implements AfterViewInit {
   }
 
   get selectedUserName(): string {
-    return this.service.selectedUser.name
+    return this.service.selectedUser.displayName
   }
 
   showSaveDialog(modified: ModifiedRight): void {

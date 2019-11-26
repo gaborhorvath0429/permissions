@@ -6,28 +6,11 @@ import { MatCheckboxChange, MatRadioGroup, MatSelect, MatDialog } from '@angular
 import { SettingsDialogComponent } from '../settings-dialog/settings-dialog.component'
 import * as _ from 'lodash'
 import * as moment from 'moment'
-
-export interface RightData {
-  id: number
-  allocated: string
-  system: string
-  name: string
-  ticket: string
-  createdBy: string
-  creationDate: string
-  expiration: string
-  rightDescription: string
-  color?: string
-}
-
-export interface System {
-  id: string
-  name: string
-}
+import { SystemDTO, RightDTO } from '../backend'
 
 export interface ModifiedRight {
   type: 'allocated' | 'unallocated'
-  right: RightData
+  right: RightDTO
 }
 
 export interface FilterSettings {
@@ -46,7 +29,7 @@ export interface FilterSettings {
 export class RightsGridComponent extends GridComponent implements OnInit {
   screenHeight = window.innerHeight
   displayedColumns: string[] = ['system', 'name', 'ticket', 'createdBy', 'creationDate', 'expiration', 'rightDescription', 'select']
-  systems: System[] = []
+  systems: SystemDTO[] = []
   modified: ModifiedRight[] = []
   filterSettings: FilterSettings = {
     ticket: '',
@@ -70,7 +53,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
   }
 
   // Assign the data to the data source for the table to render
-  setData(data: RightData[]): void {
+  setData(data: RightDTO[]): void {
     this.setDataSource(new MatTableDataSource(data))
     data.forEach(right => {
       if (right.allocated === '1') this.selection.select(right)
@@ -112,20 +95,24 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     this.dataSource.filter = '{}'
   }
 
-  checkRow(event: MatCheckboxChange, row: RightData): void {
+  checkRow(event: MatCheckboxChange, row: RightDTO): void {
     this.selection.toggle(row)
     if (row.allocated === '1' && event.checked === false) {
       this.modified.push({ type: 'unallocated', right: row })
-      row.color = '#f57878'
     } else if (row.allocated === '0' && event.checked === true) {
       this.modified.push({ type: 'allocated', right: row })
-      row.color = '#50e66e'
     } else if (row.allocated === '0' && event.checked === false) {
       this.modified = _.reject(this.modified, { right: row })
-      row.color = ''
     } else if (row.allocated === '1' && event.checked === true) {
       this.modified = _.reject(this.modified, { right: row })
-      row.color = ''
     }
+  }
+
+  getColor(row: RightDTO): string {
+    let modified = this.modified.find(e => e.right === row)
+    if (modified) {
+      return modified.type === 'allocated' ? '#50e66e' : '#f57878'
+    }
+    return ''
   }
 }

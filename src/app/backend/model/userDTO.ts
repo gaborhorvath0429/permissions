@@ -10,10 +10,12 @@
  * Do not edit the class manually.
  */
 
-export interface Group { 
-    childrenGroupIds?: Array<number>;
-    creationDate?: Date;
-    groupId?: number;
-    groupName?: string;
-    parentGroupId?: number;
+export interface UserDTO { 
+    active?: number;
+    createdBy?: string;
+    creationDate?: string;
+    deleted?: number;
+    displayName?: string;
+    userId?: number;
+    userType?: string;
 }

@@ -17,16 +17,16 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 
 import { Observable }                                        from 'rxjs';
 
-import { Group } from '../model/group';
+import { GroupDTO } from '../model/groupDTO';
 import { ModelApiResponse } from '../model/modelApiResponse';
-import { Right } from '../model/right';
+import { RightDTO } from '../model/rightDTO';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
 @Injectable()
-export class GroupService {
+export class GroupApiControllerService {
 
     protected basePath = '//localhost:8082/api';
     public defaultHeaders = new HttpHeaders();
@@ -63,7 +63,7 @@ export class GroupService {
      * @param destGroupId The id of the Group which will be used as the copy destination
      * @param opId The current user&#x27;s identification
      * @param srcGroupId The id of the Group which will be used as a copy source
-     * @param ticket The modification justified by this redmine/jira ticket
+     * @param ticket The modification justified by this jira ticket
      * @param comment The user&#x27;s comment on the operation made
      * @param dateOfGrants Only the rights will be copied, which was granted on this day
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -143,26 +143,50 @@ export class GroupService {
      * Removes the Right from the Group
      * Eliminates the connection between the Group and the Right provided (will not delete the right, just revokes)
      * @param groupId The id of the Group which right should be removed
-     * @param rightId The id of the Right should be removed from the Group
+     * @param opId The current user&#x27;s identification
+     * @param rightId The id of the Right should be set for the Group
+     * @param ticket The modification justified by this jira ticket
+     * @param comment The user&#x27;s comment on the operation made
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteGroupRight(groupId: number, rightId: number, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
-    public deleteGroupRight(groupId: number, rightId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
-    public deleteGroupRight(groupId: number, rightId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
-    public deleteGroupRight(groupId: number, rightId: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public deleteGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
+    public deleteGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
+    public deleteGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
+    public deleteGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (groupId === null || groupId === undefined) {
             throw new Error('Required parameter groupId was null or undefined when calling deleteGroupRight.');
+        }
+
+        if (opId === null || opId === undefined) {
+            throw new Error('Required parameter opId was null or undefined when calling deleteGroupRight.');
         }
 
         if (rightId === null || rightId === undefined) {
             throw new Error('Required parameter rightId was null or undefined when calling deleteGroupRight.');
         }
 
+        if (ticket === null || ticket === undefined) {
+            throw new Error('Required parameter ticket was null or undefined when calling deleteGroupRight.');
+        }
+
+
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (comment !== undefined && comment !== null) {
+            queryParameters = queryParameters.set('comment', <any>comment);
+        }
+        if (groupId !== undefined && groupId !== null) {
+            queryParameters = queryParameters.set('groupId', <any>groupId);
+        }
+        if (opId !== undefined && opId !== null) {
+            queryParameters = queryParameters.set('opId', <any>opId);
+        }
         if (rightId !== undefined && rightId !== null) {
             queryParameters = queryParameters.set('rightId', <any>rightId);
+        }
+        if (ticket !== undefined && ticket !== null) {
+            queryParameters = queryParameters.set('ticket', <any>ticket);
         }
 
         let headers = this.defaultHeaders;
@@ -192,17 +216,20 @@ export class GroupService {
     }
 
     /**
-     * Returns Group Rights
-     * Returns the rights of the Group provided
-     * @param groupId The Api returns the rights of this Group
+     * Returns a Group by id
+     * Returns a Group, based on the groupId provided
+     * @param groupId The Api returns the Group by the Id provided
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGroupRights(groupId?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Right>>;
-    public getGroupRights(groupId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Right>>>;
-    public getGroupRights(groupId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Right>>>;
-    public getGroupRights(groupId?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getGroupById(groupId: number, observe?: 'body', reportProgress?: boolean): Observable<GroupDTO>;
+    public getGroupById(groupId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<GroupDTO>>;
+    public getGroupById(groupId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<GroupDTO>>;
+    public getGroupById(groupId: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
+        if (groupId === null || groupId === undefined) {
+            throw new Error('Required parameter groupId was null or undefined when calling getGroupById.');
+        }
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (groupId !== undefined && groupId !== null) {
@@ -224,7 +251,54 @@ export class GroupService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Array<Right>>(`${this.basePath}/group/getRights`,
+        return this.httpClient.get<GroupDTO>(`${this.basePath}/group/getGroupById`,
+            {
+                params: queryParameters,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * Returns Group Rights
+     * Returns the rights of the Group provided
+     * @param groupId The Api returns the rights of this Group
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getGroupRights(groupId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<RightDTO>>;
+    public getGroupRights(groupId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<RightDTO>>>;
+    public getGroupRights(groupId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<RightDTO>>>;
+    public getGroupRights(groupId: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (groupId === null || groupId === undefined) {
+            throw new Error('Required parameter groupId was null or undefined when calling getGroupRights.');
+        }
+
+        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (groupId !== undefined && groupId !== null) {
+            queryParameters = queryParameters.set('groupId', <any>groupId);
+        }
+
+        let headers = this.defaultHeaders;
+
+        // to determine the Accept header
+        let httpHeaderAccepts: string[] = [
+            'application/json'
+        ];
+        const httpHeaderAcceptSelected: string | undefined = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        if (httpHeaderAcceptSelected != undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+        ];
+
+        return this.httpClient.get<Array<RightDTO>>(`${this.basePath}/group/getRights`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -237,26 +311,14 @@ export class GroupService {
 
     /**
      * Returns groups
-     * Returns all Groups, or just a subset based on the parameters provided
-     * @param groupId Starting group id, groups below this group will be returned. If not provided, then all groups will be returned.
-     * @param onlyChildren Technical parameter, if 1, then the given Group (the 1st parameter) will be included
+     * Returns all Groups
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getGroups(groupId?: number, onlyChildren?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Group>>;
-    public getGroups(groupId?: number, onlyChildren?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Group>>>;
-    public getGroups(groupId?: number, onlyChildren?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Group>>>;
-    public getGroups(groupId?: number, onlyChildren?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-
-
-        let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
-        if (groupId !== undefined && groupId !== null) {
-            queryParameters = queryParameters.set('groupId', <any>groupId);
-        }
-        if (onlyChildren !== undefined && onlyChildren !== null) {
-            queryParameters = queryParameters.set('onlyChildren', <any>onlyChildren);
-        }
+    public getGroups(observe?: 'body', reportProgress?: boolean): Observable<Array<GroupDTO>>;
+    public getGroups(observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<GroupDTO>>>;
+    public getGroups(observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<GroupDTO>>>;
+    public getGroups(observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -273,9 +335,8 @@ export class GroupService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Array<Group>>(`${this.basePath}/group/getGroups`,
+        return this.httpClient.get<Array<GroupDTO>>(`${this.basePath}/group/getGroups`,
             {
-                params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,
@@ -290,7 +351,7 @@ export class GroupService {
      * @param groupId The id of the Group which Right should be set
      * @param opId The current user&#x27;s identification
      * @param rightId The id of the Right should be set for the Group
-     * @param ticket The modification justified by this redmine/jira ticket
+     * @param ticket The modification justified by this jira ticket
      * @param comment The user&#x27;s comment on the operation made
      * @param expireDate The date when the Right grant expires, the Right will be revoked on that day
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.

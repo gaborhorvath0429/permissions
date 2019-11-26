@@ -5,13 +5,13 @@
       <mat-label>System</mat-label>
       <mat-select (selectionChange)="applyFilter($event, 'system')" value="all" #filter>
         <mat-option value="all">All</mat-option>
-        <mat-option *ngFor="let system of systems" [value]="system.id">
-          {{ system.name }}
+        <mat-option *ngFor="let system of systems" [value]="system.systemId">
+          {{ system.systemDescription }}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field>
-        <input matInput placeholder="Right name" (keyup)="applyFilter($event.target.value, 'name')" #filter #nameFilter>
+        <input matInput placeholder="Right name" (keyup)="applyFilter($event.target.value, 'rightName')" #filter>
     </mat-form-field>
   </div>
   <div class="radio-filters">
@@ -58,7 +58,7 @@
 
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Right Name </th>
-        <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.rightName}} </td>
       </ng-container>
 
       <ng-container matColumnDef="ticket">
@@ -78,7 +78,7 @@
 
       <ng-container matColumnDef="expiration">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Expire At </th>
-          <td mat-cell *matCellDef="let row"> {{row.expiration}} </td>
+          <td mat-cell *matCellDef="let row"> {{row.expirationDate}} </td>
       </ng-container>
 
       <ng-container matColumnDef="rightDescription">
@@ -87,7 +87,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.backgroundColor]="row.color"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.backgroundColor]="getColor(row)"></tr>
     </table>
   </ng-template>
 

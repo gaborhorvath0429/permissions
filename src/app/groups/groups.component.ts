@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core'
-import { RightsService, GroupNode } from '../services/rights.service'
+import { RightsService } from '../services/rights.service'
 import { MatTreeNestedDataSource } from '@angular/material'
 import { NestedTreeControl } from '@angular/cdk/tree'
 import * as _ from 'lodash'
+import { GroupDTO } from '../backend'
 @Component({
   selector: 'app-groups',
   templateUrl: './groups.component.html',
@@ -10,10 +11,10 @@ import * as _ from 'lodash'
 })
 export class GroupsComponent implements OnInit {
 
-  treeControl = new NestedTreeControl<GroupNode>(node => node.children)
-  clonedTree: GroupNode[]
-  groups = new MatTreeNestedDataSource<GroupNode>()
-  hasChild = (index: number, node: GroupNode) => !!node.children && node.children.length > 0
+  treeControl = new NestedTreeControl<GroupDTO>(node => node.children)
+  clonedTree: GroupDTO[]
+  groups = new MatTreeNestedDataSource<GroupDTO>()
+  hasChild = (index: number, node: GroupDTO) => !!node.children && node.children.length > 0
 
   constructor(private service: RightsService) { }
 
@@ -25,7 +26,7 @@ export class GroupsComponent implements OnInit {
     })
   }
 
-  handleGroupClick(group: GroupNode): void {
+  handleGroupClick(group: GroupDTO): void {
     this.service.getUsers(group)
     this.service.getGroupRights(group)
   }
@@ -38,7 +39,7 @@ export class GroupsComponent implements OnInit {
     value ? this.treeControl.expandAll() : this.treeControl.collapseAll()
   }
 
-  recursiveNodeEliminator(tree: GroupNode[], search: string): boolean {
+  recursiveNodeEliminator(tree: GroupDTO[], search: string): boolean {
     for (let index = tree.length - 1; index >= 0; index--) {
       const node = tree[index]
       if (node.children) {

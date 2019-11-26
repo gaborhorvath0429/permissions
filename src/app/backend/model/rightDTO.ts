@@ -10,15 +10,14 @@
  * Do not edit the class manually.
  */
 
-export interface ModelApiResponse { 
-    code?: number;
-    message?: string;
-    type?: ModelApiResponse.TypeEnum;
-}
-export namespace ModelApiResponse {
-    export type TypeEnum = 'SUCCESS' | 'ERROR';
-    export const TypeEnum = {
-        SUCCESS: 'SUCCESS' as TypeEnum,
-        ERROR: 'ERROR' as TypeEnum
-    };
+export interface RightDTO {
+    createdBy?: string;
+    creationDate?: string;
+    expirationDate?: string;
+    rightDescription?: string;
+    rightId?: number;
+    rightName?: string;
+    system?: string;
+    ticket?: string;
+    allocated?: string;
 }

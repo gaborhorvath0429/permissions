@@ -31,7 +31,7 @@ export class SaveDialogComponent implements OnInit {
   ngOnInit(): void {
     switch (this.data.type) {
       case 'user':
-        this.selected = this.service.selectedUser.name
+        this.selected = this.service.selectedUser.displayName
         break
       case 'group':
         this.selected = this.service.selectedGroup.groupName

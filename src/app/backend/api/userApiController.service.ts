@@ -18,15 +18,15 @@ import { CustomHttpUrlEncodingCodec }                        from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ModelApiResponse } from '../model/modelApiResponse';
-import { Right } from '../model/right';
-import { User } from '../model/user';
+import { RightDTO } from '../model/rightDTO';
+import { UserDTO } from '../model/userDTO';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
 
 
 @Injectable()
-export class UserService {
+export class UserApiControllerService {
 
     protected basePath = '//localhost:8082/api';
     public defaultHeaders = new HttpHeaders();
@@ -60,27 +60,51 @@ export class UserService {
     /**
      * Removes the Right from the User
      * Eliminates the connection between the User and the Right provided (will not delete the right, just revokes)
+     * @param opId The current user&#x27;s identification
      * @param rightId The id of the Right should be removed from the User
-     * @param userId The id of the User which right should be removed
+     * @param ticket The modification justified by this jira ticket
+     * @param userId The id of the User which Right should be removed
+     * @param comment The user&#x27;s comment on the operation made
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteUserRight(rightId: number, userId: number, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
-    public deleteUserRight(rightId: number, userId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
-    public deleteUserRight(rightId: number, userId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
-    public deleteUserRight(rightId: number, userId: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public deleteUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
+    public deleteUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
+    public deleteUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
+    public deleteUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (opId === null || opId === undefined) {
+            throw new Error('Required parameter opId was null or undefined when calling deleteUserRight.');
+        }
 
         if (rightId === null || rightId === undefined) {
             throw new Error('Required parameter rightId was null or undefined when calling deleteUserRight.');
+        }
+
+        if (ticket === null || ticket === undefined) {
+            throw new Error('Required parameter ticket was null or undefined when calling deleteUserRight.');
         }
 
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling deleteUserRight.');
         }
 
+
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (comment !== undefined && comment !== null) {
+            queryParameters = queryParameters.set('comment', <any>comment);
+        }
+        if (opId !== undefined && opId !== null) {
+            queryParameters = queryParameters.set('opId', <any>opId);
+        }
         if (rightId !== undefined && rightId !== null) {
             queryParameters = queryParameters.set('rightId', <any>rightId);
+        }
+        if (ticket !== undefined && ticket !== null) {
+            queryParameters = queryParameters.set('ticket', <any>ticket);
+        }
+        if (userId !== undefined && userId !== null) {
+            queryParameters = queryParameters.set('userId', <any>userId);
         }
 
         let headers = this.defaultHeaders;
@@ -116,11 +140,14 @@ export class UserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUserRights(userId?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<Right>>;
-    public getUserRights(userId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<Right>>>;
-    public getUserRights(userId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<Right>>>;
-    public getUserRights(userId?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public getUserRights(userId: number, observe?: 'body', reportProgress?: boolean): Observable<Array<RightDTO>>;
+    public getUserRights(userId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<RightDTO>>>;
+    public getUserRights(userId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<RightDTO>>>;
+    public getUserRights(userId: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
+        if (userId === null || userId === undefined) {
+            throw new Error('Required parameter userId was null or undefined when calling getUserRights.');
+        }
 
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (userId !== undefined && userId !== null) {
@@ -142,7 +169,7 @@ export class UserService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Array<Right>>(`${this.basePath}/user/getRights`,
+        return this.httpClient.get<Array<RightDTO>>(`${this.basePath}/user/getRights`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -160,9 +187,9 @@ export class UserService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getUsers(groupId?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<User>>;
-    public getUsers(groupId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<User>>>;
-    public getUsers(groupId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<User>>>;
+    public getUsers(groupId?: number, observe?: 'body', reportProgress?: boolean): Observable<Array<UserDTO>>;
+    public getUsers(groupId?: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<Array<UserDTO>>>;
+    public getUsers(groupId?: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<Array<UserDTO>>>;
     public getUsers(groupId?: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
 
@@ -186,7 +213,7 @@ export class UserService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.get<Array<User>>(`${this.basePath}/user/getUsers`,
+        return this.httpClient.get<Array<UserDTO>>(`${this.basePath}/user/getUsers`,
             {
                 params: queryParameters,
                 withCredentials: this.configuration.withCredentials,
@@ -200,27 +227,53 @@ export class UserService {
     /**
      * Adds the Right to the User
      * Creates connection between the provided User and Right, and also sets other User right data
+     * @param opId The current user&#x27;s identification
      * @param rightId The id of the Right should be set for the User
+     * @param ticket The modification justified by this jira ticket
      * @param userId The id of the User which Right should be set
+     * @param comment The user&#x27;s comment on the operation made
+     * @param expireDate The date when the Right grant expires, the Right will be revoked on that day
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public setUserRight(rightId: number, userId: number, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
-    public setUserRight(rightId: number, userId: number, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
-    public setUserRight(rightId: number, userId: number, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
-    public setUserRight(rightId: number, userId: number, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public setUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
+    public setUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
+    public setUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
+    public setUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (opId === null || opId === undefined) {
+            throw new Error('Required parameter opId was null or undefined when calling setUserRight.');
+        }
 
         if (rightId === null || rightId === undefined) {
             throw new Error('Required parameter rightId was null or undefined when calling setUserRight.');
+        }
+
+        if (ticket === null || ticket === undefined) {
+            throw new Error('Required parameter ticket was null or undefined when calling setUserRight.');
         }
 
         if (userId === null || userId === undefined) {
             throw new Error('Required parameter userId was null or undefined when calling setUserRight.');
         }
 
+
+
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
+        if (comment !== undefined && comment !== null) {
+            queryParameters = queryParameters.set('comment', <any>comment);
+        }
+        if (expireDate !== undefined && expireDate !== null) {
+            queryParameters = queryParameters.set('expireDate', <any>expireDate);
+        }
+        if (opId !== undefined && opId !== null) {
+            queryParameters = queryParameters.set('opId', <any>opId);
+        }
         if (rightId !== undefined && rightId !== null) {
             queryParameters = queryParameters.set('rightId', <any>rightId);
+        }
+        if (ticket !== undefined && ticket !== null) {
+            queryParameters = queryParameters.set('ticket', <any>ticket);
         }
         if (userId !== undefined && userId !== null) {
             queryParameters = queryParameters.set('userId', <any>userId);

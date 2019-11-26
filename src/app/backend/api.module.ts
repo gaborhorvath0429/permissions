@@ -3,16 +3,22 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
-import { GroupService } from './api/group.service';
-import { UserService } from './api/user.service';
+import { GroupApiControllerService } from './api/groupApiController.service';
+import { HomeControllerService } from './api/homeController.service';
+import { RightApiControllerService } from './api/rightApiController.service';
+import { SystemApiControllerService } from './api/systemApiController.service';
+import { UserApiControllerService } from './api/userApiController.service';
 
 @NgModule({
   imports:      [],
   declarations: [],
   exports:      [],
   providers: [
-    GroupService,
-    UserService ]
+    GroupApiControllerService,
+    HomeControllerService,
+    RightApiControllerService,
+    SystemApiControllerService,
+    UserApiControllerService ]
 })
 export class ApiModule {
     public static forRoot(configurationFactory: () => Configuration): ModuleWithProviders {
