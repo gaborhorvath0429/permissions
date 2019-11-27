@@ -20,7 +20,10 @@ export default class GridComponent {
       const parsedFilters = JSON.parse(filters)
 
       return Object.keys(parsedFilters)
-        .map(column => data[column].toLowerCase().includes(parsedFilters[column].toLowerCase()))
+        .map(column => {
+          if (!data[column] || !parsedFilters[column]) return false
+          return data[column].toLowerCase().includes(parsedFilters[column].toLowerCase())
+        })
         .every(Boolean)
     }
     this.dataSource.filter = filterClone
