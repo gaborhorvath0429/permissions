@@ -28,9 +28,8 @@
 </div>
 
 <div class="rights-grid-container mat-elevation-z8">
-  <div class="no-data" *ngIf="!dataSource.data.length; else rightsTable">Please select a {{ type }}</div>
-  <ng-template #rightsTable>
-    <table mat-table [dataSource]="dataSource" matSort>
+  <div class="no-data" *ngIf="!dataSource.data.length">Please select a {{ type }}</div>
+    <table mat-table [hidden]="!dataSource.data.length" [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="select">
         <th class="checkbox-header" mat-header-cell *matHeaderCellDef>
             <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
@@ -89,7 +88,6 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" [style.backgroundColor]="getColor(row)"></tr>
     </table>
-  </ng-template>
 
   <mat-toolbar [style.display]="dataSource.data.length ? 'block' : 'none'">
     <mat-toolbar-row>
