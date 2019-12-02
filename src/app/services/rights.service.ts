@@ -79,7 +79,7 @@ export class RightsService {
 
   private getAllocatedRights(rights: RightDTO[]): RightDTO[] {
     let allocated = []
-    this.rights.value.forEach(right => {
+    _.cloneDeep(this.rights.value).forEach(right => {
       let allocatedRight = rights.find(e => e.rightId === right.rightId)
       if (allocatedRight) {
         allocatedRight.allocated = '1'
