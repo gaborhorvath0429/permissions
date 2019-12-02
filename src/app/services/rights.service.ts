@@ -92,23 +92,49 @@ export class RightsService {
     return allocated
   }
 
-  public allocateRightForGroup(right: RightDTO, fields: any): void {
-    let group = this.selectedGroup
-    console.log('ALLOCATING', right)
+  public allocateRightForGroup(right: RightDTO, fields: any): Observable<any> {
+    let group = this.selectedGroup as GroupDTO
+    return this.groupService.setGroupRight(
+      group.groupId,
+      'ghorvath1', // TODO this parameter will be removed
+      right.rightId,
+      fields.ticket,
+      fields.comment,
+      fields.expiration
+    )
   }
 
-  public unAllocateRightForGroup(right: RightDTO, fields: any): void {
-    let group = this.selectedGroup
-    console.log('UNALLOCATING', right)
+  public unAllocateRightForGroup(right: RightDTO, fields: any): Observable<any> {
+    let group = this.selectedGroup as GroupDTO
+    return this.groupService.deleteGroupRight(
+      group.groupId,
+      'ghorvath1', // TODO this parameter will be removed
+      right.rightId,
+      fields.ticket,
+      fields.comment
+    )
   }
 
-  public allocateRightForUser(right: RightDTO, fields: any): void {
-    let user = this.selectedUser
-    console.log('ALLOCATING', right)
+  public allocateRightForUser(right: RightDTO, fields: any): Observable<any> {
+    let user = this.selectedUser as UserDTO
+    return this.userService.setUserRight(
+      'ghorvath1', // TODO this parameter will be removed
+      right.rightId,
+      fields.ticket,
+      user.userId,
+      fields.comment,
+      fields.expiration
+    )
   }
 
-  public unAllocateRightForUser(right: RightDTO, fields: any): void {
-    let user = this.selectedUser
-    console.log('UNALLOCATING', right)
+  public unAllocateRightForUser(right: RightDTO, fields: any): Observable<any> {
+    let user = this.selectedUser as UserDTO
+    return this.userService.deleteUserRight(
+      'ghorvath1', // TODO this parameter will be removed
+      right.rightId,
+      fields.ticket,
+      user.userId,
+      fields.comment
+    )
   }
 }

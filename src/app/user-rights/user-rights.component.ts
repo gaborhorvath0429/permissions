@@ -41,12 +41,17 @@ export class UserRightsComponent implements AfterViewInit {
         fields.expiration = dateFields.year + '-' + dateFields.month + '-' + dateFields.date
       }
       allocated.forEach((allocatedRight: ModifiedRight) => {
-        this.service.allocateRightForUser(allocatedRight.right, fields)
+        this.service.allocateRightForUser(allocatedRight.right, fields).subscribe(
+          res => this.snackBar.open('User permissions have been successfully saved!', '', {duration: 3000}),
+          err => this.snackBar.open(err.error.message, '', {duration: 3000})
+        )
       })
       unallocated.forEach((unallocatedRight: ModifiedRight) => {
-        this.service.unAllocateRightForUser(unallocatedRight.right, fields)
+        this.service.unAllocateRightForUser(unallocatedRight.right, fields).subscribe(
+          res => this.snackBar.open('User permissions have been successfully saved!', '', {duration: 3000}),
+          err => this.snackBar.open(err.error.message, '', {duration: 3000})
+        )
       })
-      this.snackBar.open('User permissions have been successfully saved!', '', {duration: 3000})
     })
   }
 }

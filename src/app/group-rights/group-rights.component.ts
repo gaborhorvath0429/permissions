@@ -38,12 +38,17 @@ export class GroupRightsComponent implements AfterViewInit {
       let { fields, allocated, unallocated } = result
       if (fields.expiration) fields.expiration = moment(fields.expiration).format('YYYY-MM-DD')
       allocated.forEach((allocatedRight: ModifiedRight) => {
-        this.service.allocateRightForGroup(allocatedRight.right, fields)
+        this.service.allocateRightForGroup(allocatedRight.right, fields).subscribe(
+          res => this.snackBar.open('Group permissions have been successfully saved!', '', {duration: 3000}),
+          err => this.snackBar.open(err.error.message, '', {duration: 3000})
+        )
       })
       unallocated.forEach((unallocatedRight: ModifiedRight) => {
-        this.service.unAllocateRightForGroup(unallocatedRight.right, fields)
+        this.service.unAllocateRightForGroup(unallocatedRight.right, fields).subscribe(
+          res => this.snackBar.open('Group permissions have been successfully saved!', '', {duration: 3000}),
+          err => this.snackBar.open(err.error.message, '', {duration: 3000})
+        )
       })
-      this.snackBar.open('Group permissions have been successfully saved!', '', {duration: 3000})
     })
   }
 }
