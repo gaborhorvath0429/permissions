@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable } from 'rxjs'
-import { GroupApiControllerService, UserApiControllerService, UserDTO,
-  GroupDTO, SystemDTO, SystemApiControllerService, RightDTO,
-  RightApiControllerService } from '../backend'
+import { GroupApiControllerService, UserApiControllerService,
+  SystemApiControllerService, RightApiControllerService } from '../backend'
 import { map } from 'rxjs/operators'
 import * as _ from 'lodash'
+import { SystemModel, GroupModel, UserModel, RightModel } from '../models'
 
 @Injectable({
   providedIn: 'root'
 })
 export class RightsService {
 
-  public users = new BehaviorSubject<UserDTO[]>([])
-  public userRights = new BehaviorSubject<RightDTO[]>([])
-  public groupRights = new BehaviorSubject<RightDTO[]>([])
-  public rights = new BehaviorSubject<RightDTO[]>([])
+  public users = new BehaviorSubject<UserModel[]>([])
+  public userRights = new BehaviorSubject<RightModel[]>([])
+  public groupRights = new BehaviorSubject<RightModel[]>([])
+  public rights = new BehaviorSubject<RightModel[]>([])
 
-  public selectedUser: UserDTO | { displayName: string } = { displayName: '' }
-  public selectedGroup: GroupDTO | { groupName: string } = { groupName: '' }
+  public selectedUser: UserModel | { displayName: string } = { displayName: '' }
+  public selectedGroup: GroupModel | { groupName: string } = { groupName: '' }
 
   constructor(
     private rightService: RightApiControllerService,
@@ -27,16 +27,16 @@ export class RightsService {
   ) { }
 
   public getRights(): void {
-    this.rightService.getGroupRights1().subscribe((rights: RightDTO[]) => {
+    this.rightService.getGroupRights1().subscribe((rights: RightModel[]) => {
       this.rights.next(rights)
     })
   }
 
-  public getSystems(): Observable<SystemDTO[]> {
+  public getSystems(): Observable<SystemModel[]> {
     return this.systemService.getSystems()
   }
 
-  private transformToTree(arr: GroupDTO[]): GroupDTO[] {
+  private transformToTree(arr: GroupModel[]): GroupModel[] {
     let nodes = {}
     return arr.filter(obj => {
         let id = obj.groupId
@@ -49,35 +49,35 @@ export class RightsService {
     })
 }
 
-  public getGroups(): Observable<GroupDTO[]> {
+  public getGroups(): Observable<GroupModel[]> {
     return this.groupService.getGroups().pipe(
-      map((groups: GroupDTO[]): GroupDTO[] => {
+      map((groups: GroupModel[]): GroupModel[] => {
         return this.transformToTree(groups)
       })
     )
   }
 
-  public getUsers(group: GroupDTO): void {
+  public getUsers(group: GroupModel): void {
     this.userService.getUsers(group.groupId).subscribe(
       users => this.users.next(users)
     )
   }
 
-  public getUserRights(user: UserDTO): void {
+  public getUserRights(user: UserModel): void {
     this.selectedUser = user
-    this.userService.getUserRights(user.userId).subscribe((rights: RightDTO[]) => {
+    this.userService.getUserRights(user.userId).subscribe((rights: RightModel[]) => {
       this.userRights.next(this.getAllocatedRights(rights))
     })
   }
 
-  public getGroupRights(group: GroupDTO): void {
+  public getGroupRights(group: GroupModel): void {
     this.selectedGroup = group
-    this.groupService.getGroupRights(group.groupId).subscribe((rights: RightDTO[]) => {
+    this.groupService.getGroupRights(group.groupId).subscribe((rights: RightModel[]) => {
       this.groupRights.next(this.getAllocatedRights(rights))
     })
   }
 
-  private getAllocatedRights(rights: RightDTO[]): RightDTO[] {
+  private getAllocatedRights(rights: RightModel[]): RightModel[] {
     let allocated = []
     _.cloneDeep(this.rights.value).forEach(right => {
       let allocatedRight = rights.find(e => e.rightId === right.rightId)
@@ -92,8 +92,8 @@ export class RightsService {
     return allocated
   }
 
-  public allocateRightForGroup(right: RightDTO, fields: any): Observable<any> {
-    let group = this.selectedGroup as GroupDTO
+  public allocateRightForGroup(right: RightModel, fields: any): Observable<any> {
+    let group = this.selectedGroup as GroupModel
     return this.groupService.setGroupRight(
       group.groupId,
       'ghorvath1', // TODO this parameter will be removed
@@ -104,8 +104,8 @@ export class RightsService {
     )
   }
 
-  public unAllocateRightForGroup(right: RightDTO, fields: any): Observable<any> {
-    let group = this.selectedGroup as GroupDTO
+  public unAllocateRightForGroup(right: RightModel, fields: any): Observable<any> {
+    let group = this.selectedGroup as GroupModel
     return this.groupService.deleteGroupRight(
       group.groupId,
       'ghorvath1', // TODO this parameter will be removed
@@ -115,8 +115,8 @@ export class RightsService {
     )
   }
 
-  public allocateRightForUser(right: RightDTO, fields: any): Observable<any> {
-    let user = this.selectedUser as UserDTO
+  public allocateRightForUser(right: RightModel, fields: any): Observable<any> {
+    let user = this.selectedUser as UserModel
     return this.userService.setUserRight(
       'ghorvath1', // TODO this parameter will be removed
       right.rightId,
@@ -127,8 +127,8 @@ export class RightsService {
     )
   }
 
-  public unAllocateRightForUser(right: RightDTO, fields: any): Observable<any> {
-    let user = this.selectedUser as UserDTO
+  public unAllocateRightForUser(right: RightModel, fields: any): Observable<any> {
+    let user = this.selectedUser as UserModel
     return this.userService.deleteUserRight(
       'ghorvath1', // TODO this parameter will be removed
       right.rightId,

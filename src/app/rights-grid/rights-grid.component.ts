@@ -6,11 +6,11 @@ import { MatCheckboxChange, MatRadioGroup, MatSelect, MatDialog } from '@angular
 import { SettingsDialogComponent } from '../settings-dialog/settings-dialog.component'
 import * as _ from 'lodash'
 import * as moment from 'moment'
-import { SystemDTO, RightDTO } from '../backend'
+import { RightModel, SystemModel } from '../models'
 
 export interface ModifiedRight {
   type: 'allocated' | 'unallocated'
-  right: RightDTO
+  right: RightModel
 }
 
 export interface FilterSettings {
@@ -29,7 +29,7 @@ export interface FilterSettings {
 export class RightsGridComponent extends GridComponent implements OnInit {
   screenHeight = window.innerHeight
   displayedColumns: string[] = ['system', 'name', 'ticket', 'createdBy', 'creationDate', 'expiration', 'rightDescription', 'select']
-  systems: SystemDTO[] = []
+  systems: SystemModel[] = []
   modified: ModifiedRight[] = []
   filterSettings: FilterSettings = {
     ticket: '',
@@ -53,7 +53,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
   }
 
   // Assign the data to the data source for the table to render
-  setData(data: RightDTO[]): void {
+  setData(data: RightModel[]): void {
     this.setDataSource(new MatTableDataSource(data))
     data.forEach(right => {
       if (right.allocated === '1') this.selection.select(right)
@@ -95,7 +95,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     this.dataSource.filter = '{}'
   }
 
-  checkRow(event: MatCheckboxChange, row: RightDTO): void {
+  checkRow(event: MatCheckboxChange, row: RightModel): void {
     this.selection.toggle(row)
     if (row.allocated === '1' && event.checked === false) {
       this.modified.push({ type: 'unallocated', right: row })
@@ -108,7 +108,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     }
   }
 
-  getColor(row: RightDTO): string {
+  getColor(row: RightModel): string {
     let modified = this.modified.find(e => e.right === row)
     if (modified) {
       return modified.type === 'allocated' ? '#50e66e' : '#f57878'

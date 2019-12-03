@@ -11,7 +11,6 @@
  */
 
 export interface GroupDTO {
-    children?: Array<GroupDTO>;
     creationDate?: string;
     groupId?: number;
     groupName?: string;

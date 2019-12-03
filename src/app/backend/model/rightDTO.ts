@@ -19,5 +19,4 @@ export interface RightDTO {
     rightName?: string;
     system?: string;
     ticket?: string;
-    allocated?: string;
 }

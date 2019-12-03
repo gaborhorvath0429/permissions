@@ -1,6 +1,6 @@
 import { RightsService } from './../services/rights.service'
 import { Component, OnInit } from '@angular/core'
-import { UserDTO } from '../backend'
+import { UserModel } from '../models'
 
 @Component({
   selector: 'app-users',
@@ -8,8 +8,7 @@ import { UserDTO } from '../backend'
   styleUrls: ['./users.component.scss']
 })
 export class UsersComponent implements OnInit {
-
-  users: UserDTO[] = []
+  users: UserModel[] = []
   search = ''
 
   constructor(private service: RightsService) { }
@@ -18,8 +17,7 @@ export class UsersComponent implements OnInit {
     this.service.users.subscribe(users => this.users = users)
   }
 
-  getUserRights(user: UserDTO) {
+  getUserRights(user: UserModel) {
     this.service.getUserRights(user)
   }
-
 }
