@@ -1,11 +1,10 @@
 export interface RightModel {
-  createdBy?: string
-  creationDate?: string
+  lastModBy?: string
+  lastModDate?: string
   expirationDate?: string
   rightDescription?: string
   rightId?: number
-  rightName?: string
-  system?: string
+  systemDescription?: string
   ticket?: string
   allocated?: string
 }

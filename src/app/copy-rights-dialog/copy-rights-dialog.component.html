@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Copy rights of {{ source.groupName }}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input type="text" placeholder="Select a group" aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" required #destination>
+    <mat-autocomplete (optionSelected)='selectGroup($event.option.value)' #auto="matAutocomplete" [displayWith]="displayFn(filteredOptions | async)" #groupSelect>
+      <mat-option *ngFor="let option of filteredOptions | async" [value]="option.groupId">
+        {{ option.groupName }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="selected" [disabled]="!selected">Save</button>
+</div>

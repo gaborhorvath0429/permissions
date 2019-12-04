@@ -3,7 +3,7 @@
   <div class="filter-fields">
     <mat-form-field>
       <mat-label>System</mat-label>
-      <mat-select (selectionChange)="applyFilter($event, 'system')" value="all" #filter>
+      <mat-select (selectionChange)="applyFilter($event, 'systemDescription')" value="all" #filter>
         <mat-option value="all">All</mat-option>
         <mat-option *ngFor="let system of systems" [value]="system.systemId">
           {{ system.systemDescription }}
@@ -11,7 +11,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field>
-        <input matInput placeholder="Right name" (keyup)="applyFilter($event.target.value, 'rightName')" #filter>
+        <input matInput placeholder="Right description" (keyup)="applyFilter($event.target.value, 'rightDescription')" #filter>
     </mat-form-field>
   </div>
   <div class="radio-filters">
@@ -50,14 +50,9 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="system">
+      <ng-container matColumnDef="systemDescription">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> System </th>
-        <td mat-cell *matCellDef="let row"> {{row.system}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Right Name </th>
-        <td mat-cell *matCellDef="let row"> {{row.rightName}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.systemDescription}} </td>
       </ng-container>
 
       <ng-container matColumnDef="ticket">
@@ -65,18 +60,18 @@
         <td mat-cell *matCellDef="let row"> {{row.ticket}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="createdBy">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By </th>
-        <td mat-cell *matCellDef="let row"> {{row.createdBy}} </td>
+      <ng-container matColumnDef="lastModBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Last modified by </th>
+        <td mat-cell *matCellDef="let row"> {{row.lastModBy}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="creationDate">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Created At </th>
-          <td mat-cell *matCellDef="let row"> {{row.creationDate}} </td>
+      <ng-container matColumnDef="lastModDate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last modified at </th>
+          <td mat-cell *matCellDef="let row"> {{row.lastModDate}} </td>
       </ng-container>
 
       <ng-container matColumnDef="expiration">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Expire At </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Expire at </th>
           <td mat-cell *matCellDef="let row"> {{row.expirationDate}} </td>
       </ng-container>
 
@@ -93,6 +88,7 @@
     <mat-toolbar-row>
       <button class="save-button" *ngIf="modified.length" (click)="save.emit(modified)" [matBadge]="modified.length" matBadgeColor="accent" color="primary" mat-raised-button>Save</button>
       <mat-paginator [pageSize]="screenHeight < 940 ? 10 : 5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      <button *ngIf="canCopy" class="copy-button" (click)="copyRights.emit()" color="primary" mat-raised-button>Copy rights</button>
     </mat-toolbar-row>
   </mat-toolbar>
 </div>

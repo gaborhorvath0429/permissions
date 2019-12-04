@@ -60,7 +60,6 @@ export class UserApiControllerService {
     /**
      * Removes the Right from the User
      * Eliminates the connection between the User and the Right provided (will not delete the right, just revokes)
-     * @param opId The current user&#x27;s identification
      * @param rightId The id of the Right should be removed from the User
      * @param ticket The modification justified by this jira ticket
      * @param userId The id of the User which Right should be removed
@@ -68,14 +67,10 @@ export class UserApiControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
-    public deleteUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
-    public deleteUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
-    public deleteUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        if (opId === null || opId === undefined) {
-            throw new Error('Required parameter opId was null or undefined when calling deleteUserRight.');
-        }
+    public deleteUserRight(rightId: number, ticket: string, userId: number, comment?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
+    public deleteUserRight(rightId: number, ticket: string, userId: number, comment?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
+    public deleteUserRight(rightId: number, ticket: string, userId: number, comment?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
+    public deleteUserRight(rightId: number, ticket: string, userId: number, comment?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (rightId === null || rightId === undefined) {
             throw new Error('Required parameter rightId was null or undefined when calling deleteUserRight.');
@@ -93,9 +88,6 @@ export class UserApiControllerService {
         let queryParameters = new HttpParams({encoder: new CustomHttpUrlEncodingCodec()});
         if (comment !== undefined && comment !== null) {
             queryParameters = queryParameters.set('comment', <any>comment);
-        }
-        if (opId !== undefined && opId !== null) {
-            queryParameters = queryParameters.set('opId', <any>opId);
         }
         if (rightId !== undefined && rightId !== null) {
             queryParameters = queryParameters.set('rightId', <any>rightId);
@@ -227,7 +219,6 @@ export class UserApiControllerService {
     /**
      * Adds the Right to the User
      * Creates connection between the provided User and Right, and also sets other User right data
-     * @param opId The current user&#x27;s identification
      * @param rightId The id of the Right should be set for the User
      * @param ticket The modification justified by this jira ticket
      * @param userId The id of the User which Right should be set
@@ -236,14 +227,10 @@ export class UserApiControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public setUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
-    public setUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
-    public setUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
-    public setUserRight(opId: string, rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
-
-        if (opId === null || opId === undefined) {
-            throw new Error('Required parameter opId was null or undefined when calling setUserRight.');
-        }
+    public setUserRight(rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
+    public setUserRight(rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
+    public setUserRight(rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
+    public setUserRight(rightId: number, ticket: string, userId: number, comment?: string, expireDate?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (rightId === null || rightId === undefined) {
             throw new Error('Required parameter rightId was null or undefined when calling setUserRight.');
@@ -265,9 +252,6 @@ export class UserApiControllerService {
         }
         if (expireDate !== undefined && expireDate !== null) {
             queryParameters = queryParameters.set('expireDate', <any>expireDate);
-        }
-        if (opId !== undefined && opId !== null) {
-            queryParameters = queryParameters.set('opId', <any>opId);
         }
         if (rightId !== undefined && rightId !== null) {
             queryParameters = queryParameters.set('rightId', <any>rightId);

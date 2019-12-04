@@ -12,8 +12,6 @@
 
 export interface UserDTO { 
     active?: number;
-    createdBy?: string;
-    creationDate?: string;
     deleted?: number;
     displayName?: string;
     userId?: number;

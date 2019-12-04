@@ -4,10 +4,10 @@
     <input matInput placeholder="Ticket" [(ngModel)]="fields.ticket">
   </mat-form-field>
   <mat-form-field>
-    <input matInput placeholder="Created by" [(ngModel)]="fields.createdBy">
+    <input matInput placeholder="Created by" [(ngModel)]="fields.lastModBy">
   </mat-form-field>
   <mat-form-field>
-    <input matInput [matDatepicker]="pickerCreation" placeholder="Creation Date" [(ngModel)]="fields.creationDate">
+    <input matInput [matDatepicker]="pickerCreation" placeholder="Last modified date" [(ngModel)]="fields.lastModDate">
     <mat-datepicker-toggle matSuffix [for]="pickerCreation"></mat-datepicker-toggle>
     <mat-datepicker #pickerCreation></mat-datepicker>
   </mat-form-field>
@@ -15,9 +15,6 @@
     <input matInput [matDatepicker]="pickerExpiration" placeholder="Expiration Date" [(ngModel)]="fields.expiration">
     <mat-datepicker-toggle matSuffix [for]="pickerExpiration"></mat-datepicker-toggle>
     <mat-datepicker #pickerExpiration></mat-datepicker>
-  </mat-form-field>
-  <mat-form-field>
-    <input matInput placeholder="Description" [(ngModel)]="fields.rightDescription">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>

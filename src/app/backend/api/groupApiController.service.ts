@@ -61,7 +61,6 @@ export class GroupApiControllerService {
      * Copies all rights from a Group to another Group
      * Copies all rights of a Group (srcGroupId) into another Group (destGroupId)
      * @param destGroupId The id of the Group which will be used as the copy destination
-     * @param opId The current user&#x27;s identification
      * @param srcGroupId The id of the Group which will be used as a copy source
      * @param ticket The modification justified by this jira ticket
      * @param comment The user&#x27;s comment on the operation made
@@ -69,17 +68,13 @@ export class GroupApiControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public copyGroupRights(destGroupId: number, opId: string, srcGroupId: number, ticket: string, comment?: string, dateOfGrants?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
-    public copyGroupRights(destGroupId: number, opId: string, srcGroupId: number, ticket: string, comment?: string, dateOfGrants?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
-    public copyGroupRights(destGroupId: number, opId: string, srcGroupId: number, ticket: string, comment?: string, dateOfGrants?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
-    public copyGroupRights(destGroupId: number, opId: string, srcGroupId: number, ticket: string, comment?: string, dateOfGrants?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public copyGroupRights(destGroupId: number, srcGroupId: number, ticket: string, comment?: string, dateOfGrants?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
+    public copyGroupRights(destGroupId: number, srcGroupId: number, ticket: string, comment?: string, dateOfGrants?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
+    public copyGroupRights(destGroupId: number, srcGroupId: number, ticket: string, comment?: string, dateOfGrants?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
+    public copyGroupRights(destGroupId: number, srcGroupId: number, ticket: string, comment?: string, dateOfGrants?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (destGroupId === null || destGroupId === undefined) {
             throw new Error('Required parameter destGroupId was null or undefined when calling copyGroupRights.');
-        }
-
-        if (opId === null || opId === undefined) {
-            throw new Error('Required parameter opId was null or undefined when calling copyGroupRights.');
         }
 
         if (srcGroupId === null || srcGroupId === undefined) {
@@ -101,9 +96,6 @@ export class GroupApiControllerService {
         }
         if (destGroupId !== undefined && destGroupId !== null) {
             queryParameters = queryParameters.set('destGroupId', <any>destGroupId);
-        }
-        if (opId !== undefined && opId !== null) {
-            queryParameters = queryParameters.set('opId', <any>opId);
         }
         if (srcGroupId !== undefined && srcGroupId !== null) {
             queryParameters = queryParameters.set('srcGroupId', <any>srcGroupId);
@@ -143,24 +135,19 @@ export class GroupApiControllerService {
      * Removes the Right from the Group
      * Eliminates the connection between the Group and the Right provided (will not delete the right, just revokes)
      * @param groupId The id of the Group which right should be removed
-     * @param opId The current user&#x27;s identification
      * @param rightId The id of the Right should be set for the Group
      * @param ticket The modification justified by this jira ticket
      * @param comment The user&#x27;s comment on the operation made
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
-    public deleteGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
-    public deleteGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
-    public deleteGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public deleteGroupRight(groupId: number, rightId: number, ticket: string, comment?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
+    public deleteGroupRight(groupId: number, rightId: number, ticket: string, comment?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
+    public deleteGroupRight(groupId: number, rightId: number, ticket: string, comment?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
+    public deleteGroupRight(groupId: number, rightId: number, ticket: string, comment?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (groupId === null || groupId === undefined) {
             throw new Error('Required parameter groupId was null or undefined when calling deleteGroupRight.');
-        }
-
-        if (opId === null || opId === undefined) {
-            throw new Error('Required parameter opId was null or undefined when calling deleteGroupRight.');
         }
 
         if (rightId === null || rightId === undefined) {
@@ -178,9 +165,6 @@ export class GroupApiControllerService {
         }
         if (groupId !== undefined && groupId !== null) {
             queryParameters = queryParameters.set('groupId', <any>groupId);
-        }
-        if (opId !== undefined && opId !== null) {
-            queryParameters = queryParameters.set('opId', <any>opId);
         }
         if (rightId !== undefined && rightId !== null) {
             queryParameters = queryParameters.set('rightId', <any>rightId);
@@ -349,7 +333,6 @@ export class GroupApiControllerService {
      * Adds the Right to the Group
      * Creates connection between the provided Group and Right, and also sets other group right data
      * @param groupId The id of the Group which Right should be set
-     * @param opId The current user&#x27;s identification
      * @param rightId The id of the Right should be set for the Group
      * @param ticket The modification justified by this jira ticket
      * @param comment The user&#x27;s comment on the operation made
@@ -357,17 +340,13 @@ export class GroupApiControllerService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public setGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, expireDate?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
-    public setGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, expireDate?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
-    public setGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, expireDate?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
-    public setGroupRight(groupId: number, opId: string, rightId: number, ticket: string, comment?: string, expireDate?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public setGroupRight(groupId: number, rightId: number, ticket: string, comment?: string, expireDate?: string, observe?: 'body', reportProgress?: boolean): Observable<ModelApiResponse>;
+    public setGroupRight(groupId: number, rightId: number, ticket: string, comment?: string, expireDate?: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ModelApiResponse>>;
+    public setGroupRight(groupId: number, rightId: number, ticket: string, comment?: string, expireDate?: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ModelApiResponse>>;
+    public setGroupRight(groupId: number, rightId: number, ticket: string, comment?: string, expireDate?: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (groupId === null || groupId === undefined) {
             throw new Error('Required parameter groupId was null or undefined when calling setGroupRight.');
-        }
-
-        if (opId === null || opId === undefined) {
-            throw new Error('Required parameter opId was null or undefined when calling setGroupRight.');
         }
 
         if (rightId === null || rightId === undefined) {
@@ -389,9 +368,6 @@ export class GroupApiControllerService {
         }
         if (groupId !== undefined && groupId !== null) {
             queryParameters = queryParameters.set('groupId', <any>groupId);
-        }
-        if (opId !== undefined && opId !== null) {
-            queryParameters = queryParameters.set('opId', <any>opId);
         }
         if (rightId !== undefined && rightId !== null) {
             queryParameters = queryParameters.set('rightId', <any>rightId);

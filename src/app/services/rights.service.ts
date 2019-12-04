@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { GroupApiControllerService, UserApiControllerService,
   SystemApiControllerService, RightApiControllerService } from '../backend'
-import { map } from 'rxjs/operators'
+import { map, tap } from 'rxjs/operators'
 import * as _ from 'lodash'
 import { SystemModel, GroupModel, UserModel, RightModel } from '../models'
 
@@ -12,6 +12,7 @@ import { SystemModel, GroupModel, UserModel, RightModel } from '../models'
 export class RightsService {
 
   public users = new BehaviorSubject<UserModel[]>([])
+  public groups = new BehaviorSubject<GroupModel[]>([])
   public userRights = new BehaviorSubject<RightModel[]>([])
   public groupRights = new BehaviorSubject<RightModel[]>([])
   public rights = new BehaviorSubject<RightModel[]>([])
@@ -51,6 +52,7 @@ export class RightsService {
 
   public getGroups(): Observable<GroupModel[]> {
     return this.groupService.getGroups().pipe(
+      tap((groups: GroupModel[]): void => this.groups.next(groups)),
       map((groups: GroupModel[]): GroupModel[] => {
         return this.transformToTree(groups)
       })
@@ -96,7 +98,6 @@ export class RightsService {
     let group = this.selectedGroup as GroupModel
     return this.groupService.setGroupRight(
       group.groupId,
-      'ghorvath1', // TODO this parameter will be removed
       right.rightId,
       fields.ticket,
       fields.comment,
@@ -108,7 +109,6 @@ export class RightsService {
     let group = this.selectedGroup as GroupModel
     return this.groupService.deleteGroupRight(
       group.groupId,
-      'ghorvath1', // TODO this parameter will be removed
       right.rightId,
       fields.ticket,
       fields.comment
@@ -118,7 +118,6 @@ export class RightsService {
   public allocateRightForUser(right: RightModel, fields: any): Observable<any> {
     let user = this.selectedUser as UserModel
     return this.userService.setUserRight(
-      'ghorvath1', // TODO this parameter will be removed
       right.rightId,
       fields.ticket,
       user.userId,
@@ -130,7 +129,6 @@ export class RightsService {
   public unAllocateRightForUser(right: RightModel, fields: any): Observable<any> {
     let user = this.selectedUser as UserModel
     return this.userService.deleteUserRight(
-      'ghorvath1', // TODO this parameter will be removed
       right.rightId,
       fields.ticket,
       user.userId,

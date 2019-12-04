@@ -10,8 +10,7 @@
  * Do not edit the class manually.
  */
 
-export interface GroupDTO {
-    creationDate?: string;
+export interface GroupDTO { 
     groupId?: number;
     groupName?: string;
     parentGroupId?: number;

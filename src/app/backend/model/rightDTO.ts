@@ -10,13 +10,13 @@
  * Do not edit the class manually.
  */
 
-export interface RightDTO {
-    createdBy?: string;
-    creationDate?: string;
+export interface RightDTO { 
+    comment?: string;
     expirationDate?: string;
+    lastModBy?: string;
+    lastModDate?: string;
     rightDescription?: string;
     rightId?: number;
-    rightName?: string;
-    system?: string;
+    systemDescription?: string;
     ticket?: string;
 }

@@ -4,6 +4,7 @@ import { RightsService } from '../services/rights.service'
 import { MatDialog, MatSnackBar } from '@angular/material'
 import { SaveDialogComponent } from '../save-dialog/save-dialog.component'
 import * as moment from 'moment'
+import { CopyRightsDialogComponent } from '../copy-rights-dialog/copy-rights-dialog.component'
 @Component({
   selector: 'app-group-rights',
   templateUrl: './group-rights.component.html',
@@ -49,6 +50,19 @@ export class GroupRightsComponent implements AfterViewInit {
           err => this.snackBar.open(err.error.message, '', {duration: 3000})
         )
       })
+    })
+  }
+
+  showCopyRightsDialog(): void {
+    const dialogRef = this.dialog.open(CopyRightsDialogComponent, {
+      width: '400px',
+      data: this.service.selectedGroup
+    })
+
+    dialogRef.afterClosed().subscribe(target => {
+      if (!target) return
+      let source = this.service.selectedGroup
+      console.log('copy right', target)
     })
   }
 }

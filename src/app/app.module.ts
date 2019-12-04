@@ -6,7 +6,7 @@ import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
   MatSortModule, MatTableModule, MatCheckboxModule, MatToolbarModule, MatListModule,
   MatTreeModule, MatIconModule, MatButtonModule, MatSelectModule, MatRadioModule,
   MatDialogModule, MatDatepickerModule, MatNativeDateModule,
-  MatSnackBarModule, MatBadgeModule } from '@angular/material'
+  MatSnackBarModule, MatBadgeModule, MatAutocompleteModule } from '@angular/material'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -20,7 +20,8 @@ import { SaveDialogComponent } from './save-dialog/save-dialog.component'
 import { MomentDateAdapter } from '@angular/material-moment-adapter'
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material'
 import { ApiModule } from './backend'
-import { SettingsDialogComponent } from './settings-dialog/settings-dialog.component'
+import { SettingsDialogComponent } from './settings-dialog/settings-dialog.component';
+import { CopyRightsDialogComponent } from './copy-rights-dialog/copy-rights-dialog.component'
 
 const DATE_FORMAT = {
   parse: {
@@ -45,6 +46,7 @@ const DATE_FORMAT = {
     UserSearchPipe,
     SaveDialogComponent,
     SettingsDialogComponent,
+    CopyRightsDialogComponent,
   ],
   imports: [
     HttpClientModule,
@@ -71,9 +73,10 @@ const DATE_FORMAT = {
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatAutocompleteModule
   ],
-  entryComponents: [SaveDialogComponent, SettingsDialogComponent],
+  entryComponents: [SaveDialogComponent, SettingsDialogComponent, CopyRightsDialogComponent],
   providers: [
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},

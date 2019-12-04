@@ -15,8 +15,8 @@ export interface ModifiedRight {
 
 export interface FilterSettings {
   ticket?: string
-  createdBy?: string
-  creationDate?: string
+  lastModBy?: string
+  lastModDate?: string
   expiration?: string
   rightDescription?: string
 }
@@ -28,19 +28,20 @@ export interface FilterSettings {
 })
 export class RightsGridComponent extends GridComponent implements OnInit {
   screenHeight = window.innerHeight
-  displayedColumns: string[] = ['system', 'name', 'ticket', 'createdBy', 'creationDate', 'expiration', 'rightDescription', 'select']
+  displayedColumns: string[] = ['systemDescription', 'ticket', 'lastModBy', 'lastModDate', 'expiration', 'rightDescription', 'select']
   systems: SystemModel[] = []
   modified: ModifiedRight[] = []
   filterSettings: FilterSettings = {
     ticket: '',
-    createdBy: '',
-    creationDate: '',
+    lastModBy: '',
+    lastModDate: '',
     expiration: '',
-    rightDescription: ''
   }
 
   @Input() type: 'group' | 'user'
+  @Input() canCopy: boolean
   @Output() save = new EventEmitter<ModifiedRight>()
+  @Output() copyRights = new EventEmitter()
 
   @ViewChild(MatRadioGroup) radioGroup: MatRadioGroup
   @ViewChildren('filter') filterFields: QueryList<ElementRef>
@@ -69,7 +70,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return
       if (result.expiration) result.expiration = moment(result.expiration).format('YYYY-MM-DD')
-      if (result.creationDate) result.creationDate = moment(result.creationDate).format('YYYY-MM-DD')
+      if (result.lastModDate) result.lastModDate = moment(result.lastModDate).format('YYYY-MM-DD')
       this.filterSettings = result
       Object.keys(result).forEach(key => this.applyFilter(result[key], key))
     })
@@ -85,10 +86,9 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     })
     this.filterSettings = {
       ticket: '',
-      createdBy: '',
-      creationDate: '',
+      lastModBy: '',
+      lastModDate: '',
       expiration: '',
-      rightDescription: ''
     }
     this.radioGroup.value = 'all'
     this.filter = {}
