@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { BehaviorSubject, Observable } from 'rxjs'
 import { GroupApiControllerService, UserApiControllerService,
-  SystemApiControllerService, RightApiControllerService } from '../backend'
+  SystemApiControllerService, RightApiControllerService, ModelApiResponse } from '../backend'
 import { map, tap } from 'rxjs/operators'
 import * as _ from 'lodash'
 import { SystemModel, GroupModel, UserModel, RightModel } from '../models'
@@ -79,6 +79,10 @@ export class RightsService {
     })
   }
 
+  public copyGroupRights(sourceGroupId: number, targetGroupId: number, fields: any): Observable<ModelApiResponse> {
+    return this.groupService.copyGroupRights(targetGroupId, sourceGroupId, fields.ticket, fields.comment, fields.expiration)
+  }
+
   private getAllocatedRights(rights: RightModel[]): RightModel[] {
     let allocated = []
     _.cloneDeep(this.rights.value).forEach(right => {
@@ -94,7 +98,7 @@ export class RightsService {
     return allocated
   }
 
-  public allocateRightForGroup(right: RightModel, fields: any): Observable<any> {
+  public allocateRightForGroup(right: RightModel, fields: any): Promise<ModelApiResponse> {
     let group = this.selectedGroup as GroupModel
     return this.groupService.setGroupRight(
       group.groupId,
@@ -102,20 +106,20 @@ export class RightsService {
       fields.ticket,
       fields.comment,
       fields.expiration
-    )
+    ).toPromise()
   }
 
-  public unAllocateRightForGroup(right: RightModel, fields: any): Observable<any> {
+  public unAllocateRightForGroup(right: RightModel, fields: any): Promise<ModelApiResponse> {
     let group = this.selectedGroup as GroupModel
     return this.groupService.deleteGroupRight(
       group.groupId,
       right.rightId,
       fields.ticket,
       fields.comment
-    )
+    ).toPromise()
   }
 
-  public allocateRightForUser(right: RightModel, fields: any): Observable<any> {
+  public allocateRightForUser(right: RightModel, fields: any): Promise<ModelApiResponse> {
     let user = this.selectedUser as UserModel
     return this.userService.setUserRight(
       right.rightId,
@@ -123,16 +127,16 @@ export class RightsService {
       user.userId,
       fields.comment,
       fields.expiration
-    )
+    ).toPromise()
   }
 
-  public unAllocateRightForUser(right: RightModel, fields: any): Observable<any> {
+  public unAllocateRightForUser(right: RightModel, fields: any): Promise<ModelApiResponse> {
     let user = this.selectedUser as UserModel
     return this.userService.deleteUserRight(
       right.rightId,
       fields.ticket,
       user.userId,
       fields.comment
-    )
+    ).toPromise()
   }
 }

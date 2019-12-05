@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, Input } from '@angular/core'
 import { RightsService } from '../services/rights.service'
 import { MatTreeNestedDataSource } from '@angular/material'
 import { NestedTreeControl } from '@angular/cdk/tree'
@@ -11,6 +11,7 @@ import { GroupModel } from '../models'
 })
 export class GroupsComponent implements OnInit {
 
+  @Input() toolbar = true // whether we want to show the toolbar or not
   treeControl = new NestedTreeControl<GroupModel>(node => node.children)
   clonedTree: GroupModel[]
   groups = new MatTreeNestedDataSource<GroupModel>()

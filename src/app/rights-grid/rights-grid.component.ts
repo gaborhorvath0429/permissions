@@ -39,7 +39,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
   }
 
   @Input() type: 'group' | 'user'
-  @Input() canCopy: boolean
+  @Input() canCopy?: boolean // whether we want to show the copy rights button or not
   @Output() save = new EventEmitter<ModifiedRight>()
   @Output() copyRights = new EventEmitter()
 

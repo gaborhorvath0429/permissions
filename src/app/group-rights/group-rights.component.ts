@@ -5,6 +5,8 @@ import { MatDialog, MatSnackBar } from '@angular/material'
 import { SaveDialogComponent } from '../save-dialog/save-dialog.component'
 import * as moment from 'moment'
 import { CopyRightsDialogComponent } from '../copy-rights-dialog/copy-rights-dialog.component'
+import { GroupModel } from '../models'
+import { ModelApiResponse } from '../backend'
 @Component({
   selector: 'app-group-rights',
   templateUrl: './group-rights.component.html',
@@ -38,31 +40,41 @@ export class GroupRightsComponent implements AfterViewInit {
       if (!result) return
       let { fields, allocated, unallocated } = result
       if (fields.expiration) fields.expiration = moment(fields.expiration).format('YYYY-MM-DD')
+      let promises: Promise<ModelApiResponse>[] = []
       allocated.forEach((allocatedRight: ModifiedRight) => {
-        this.service.allocateRightForGroup(allocatedRight.right, fields).subscribe(
-          res => this.snackBar.open('Group permissions have been successfully saved!', '', {duration: 3000}),
-          err => this.snackBar.open(err.error.message, '', {duration: 3000})
-        )
+        promises.push(this.service.allocateRightForGroup(allocatedRight.right, fields))
       })
       unallocated.forEach((unallocatedRight: ModifiedRight) => {
-        this.service.unAllocateRightForGroup(unallocatedRight.right, fields).subscribe(
-          res => this.snackBar.open('Group permissions have been successfully saved!', '', {duration: 3000}),
-          err => this.snackBar.open(err.error.message, '', {duration: 3000})
-        )
+        promises.push(this.service.unAllocateRightForGroup(unallocatedRight.right, fields))
       })
+
+      Promise.all(promises)
+      .then(
+        () => {
+          this.snackBar.open('Group permissions have been successfully saved!', '', {duration: 3000})
+          this.grid.modified = []
+          this.service.getGroupRights(this.service.selectedGroup)
+        }
+      ).catch(
+        err => this.snackBar.open(err.error.message, '', {duration: 3000})
+      )
     })
   }
 
   showCopyRightsDialog(): void {
     const dialogRef = this.dialog.open(CopyRightsDialogComponent, {
-      width: '400px',
+      width: '825px',
       data: this.service.selectedGroup
     })
 
-    dialogRef.afterClosed().subscribe(target => {
+    dialogRef.afterClosed().subscribe(({target, fields}) => {
       if (!target) return
-      let source = this.service.selectedGroup
-      console.log('copy right', target)
+      let source = this.service.selectedGroup as GroupModel
+      if (fields.expiration) fields.expiration = moment(fields.expiration).format('YYYY-MM-DD')
+      this.service.copyGroupRights(source.groupId, target.groupId, fields).subscribe(
+        res => this.snackBar.open('Group permissions have been successfully copied!', '', {duration: 3000}),
+        err => this.snackBar.open(err.error.message, '', {duration: 3000})
+      )
     })
   }
 }
