@@ -4,6 +4,7 @@ import { Observable } from 'rxjs'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material'
 import { GroupModel } from '../models'
 import { GroupsComponent } from '../groups/groups.component'
+import * as moment from 'moment'
 
 @Component({
   selector: 'app-copy-rights-dialog',
@@ -18,7 +19,7 @@ export class CopyRightsDialogComponent implements AfterViewInit {
   fields = {
     ticket: '',
     comment: '',
-    expiration: ''
+    expiration: moment(new Date()).format('YYYY-MM-DD')
   }
 
   @ViewChild(GroupsComponent) groupsComponent: GroupsComponent
