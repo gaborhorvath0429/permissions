@@ -1,31 +1,24 @@
 .grid-container {
   display: grid;
   grid-template-areas:
-    'groups users group-rights'
-    'groups users user-rights';
+    'groups users rights';
   grid-gap: 0.5rem;
   padding: 0.3rem 0.5rem;
 }
 
 @media screen and (max-height: 940px) {
-  .grid-container {
-    grid-template-areas:
-      'groups users group-rights user-rights'
-      'groups users group-rights user-rights';
-  }
   app-group-rights {
-    width: 50vw !important;
+    width: 60vw !important;
   }
 
   app-user-rights {
-    width: 50vw !important;
+    width: 60vw !important;
   }
 
   app-groups {
     height: 97vh !important;
   }
 }
-
 
 app-groups {
   overflow-y: scroll;
@@ -47,12 +40,14 @@ app-users {
 
 app-group-rights {
   width: 64vw;
+  height: 99vh;
   padding: 0 0.5rem;
-  grid-area: group-rights;
+  grid-area: rights;
 }
 
 app-user-rights {
   width: 64vw;
+  height: 99vh;
   padding: 0 0.5rem;
-  grid-area: user-rights;
+  grid-area: rights;
 }

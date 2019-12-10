@@ -86,7 +86,7 @@
   <mat-toolbar [style.display]="dataSource.data.length ? 'block' : 'none'">
     <mat-toolbar-row>
       <button class="save-button" *ngIf="modified.length" (click)="save.emit(modified)" [matBadge]="modified.length" matBadgeColor="accent" color="primary" mat-raised-button>Save</button>
-      <mat-paginator [pageSize]="screenHeight < 940 ? 10 : 5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      <mat-paginator [pageSize]="screenHeight < 940 ? 10 : 15" [pageSizeOptions]="[5, 10, 15, 25, 50, 100]"></mat-paginator>
       <button *ngIf="canCopy" class="copy-button" (click)="copyRights.emit()" color="primary" mat-raised-button>Copy rights</button>
     </mat-toolbar-row>
   </mat-toolbar>
