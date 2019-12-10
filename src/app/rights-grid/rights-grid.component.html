@@ -44,7 +44,6 @@
           <mat-checkbox (click)="$event.stopPropagation()"
                         (change)="$event ? checkRow($event, row) : null"
                         [checked]="selection.isSelected(row)"
-                        [aria-label]="checkboxLabel(row)"
                         color="primary">
           </mat-checkbox>
         </td>

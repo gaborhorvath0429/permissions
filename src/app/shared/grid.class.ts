@@ -2,6 +2,7 @@ import { MatTableDataSource, MatPaginator, MatSort, MatRadioButton, MatSelect } 
 import { SelectionModel } from '@angular/cdk/collections'
 import { ViewChild } from '@angular/core'
 import * as _ from 'lodash'
+import * as moment from 'moment'
 
 export default class GridComponent {
   dataSource: MatTableDataSource<any>
@@ -21,7 +22,13 @@ export default class GridComponent {
 
       return Object.keys(parsedFilters)
         .map(column => {
-          if (!data[column] || !parsedFilters[column]) return false
+          if (!parsedFilters[column]) return false
+          if (column.includes('DateFrom')) {
+            return data[column.replace('From', '')] >= parsedFilters[column]
+          }
+          if (column.includes('DateTo')) {
+            return data[column.replace('To', '')] <= parsedFilters[column]
+          }
           return data[column].toLowerCase().includes(parsedFilters[column].toLowerCase())
         })
         .every(Boolean)
@@ -29,27 +36,8 @@ export default class GridComponent {
     this.dataSource.filter = filterClone
   }
 
-  isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length
-    const numRows = this.dataSource.data.length
-    return numSelected === numRows
-  }
-
-  masterToggle(): void {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.data.forEach(row => this.selection.select(row))
-  }
-
-  checkboxLabel(row?: any): string {
-    if (!row) {
-      return `${this.isAllSelected() ? 'select' : 'deselect'} all`
-    }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`
-  }
-
   applyFilter(filterValue: any, column: string): void {
-    if (filterValue.source) {
+    if (filterValue && filterValue.source) {
       if (filterValue.source instanceof MatSelect) {
         filterValue = filterValue.source.selected.viewValue
         if (filterValue === 'All') filterValue = ''
@@ -58,6 +46,9 @@ export default class GridComponent {
         if (filterValue === 'all') filterValue = ''
       }
     }
+
+    if (moment.isMoment(filterValue)) filterValue = moment(filterValue).format('YYYY-MM-DD')
+
     this.filter = {
       ...this.filter,
       [column]: filterValue

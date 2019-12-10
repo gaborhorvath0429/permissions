@@ -16,9 +16,10 @@ export interface ModifiedRight {
 export interface FilterSettings {
   ticket?: string
   lastModBy?: string
-  lastModDate?: string
-  expiration?: string
-  rightDescription?: string
+  lastModDateFrom?: string
+  lastModDateTo?: string
+  expirationDateFrom?: string
+  expirationDateTo?: string
 }
 
 @Component({
@@ -34,8 +35,10 @@ export class RightsGridComponent extends GridComponent implements OnInit {
   filterSettings: FilterSettings = {
     ticket: '',
     lastModBy: '',
-    lastModDate: '',
-    expiration: '',
+    lastModDateFrom: '',
+    lastModDateTo: '',
+    expirationDateFrom: '',
+    expirationDateTo: '',
   }
 
   @Input() type: 'group' | 'user'
@@ -63,7 +66,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
 
   showSettingsDialog(): void {
     const dialogRef = this.dialog.open(SettingsDialogComponent, {
-      width: '270px',
+      width: '500px',
       data: _.cloneDeep(this.filterSettings)
     })
 
@@ -87,8 +90,10 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     this.filterSettings = {
       ticket: '',
       lastModBy: '',
-      lastModDate: '',
-      expiration: '',
+      lastModDateFrom: '',
+      lastModDateTo: '',
+      expirationDateFrom: '',
+      expirationDateTo: ''
     }
     this.radioGroup.value = 'all'
     this.filter = {}

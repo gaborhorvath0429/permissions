@@ -1,5 +1,4 @@
 import { Component, Inject, ViewChild, AfterViewInit } from '@angular/core'
-import { FormControl } from '@angular/forms'
 import { Observable } from 'rxjs'
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material'
 import { GroupModel } from '../models'
@@ -12,7 +11,6 @@ import * as moment from 'moment'
   styleUrls: ['./copy-rights-dialog.component.scss']
 })
 export class CopyRightsDialogComponent implements AfterViewInit {
-  myControl = new FormControl()
   selected: GroupModel
   filteredOptions: Observable<GroupModel[]>
 
