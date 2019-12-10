@@ -29,7 +29,7 @@ export default class GridComponent {
           if (column.includes('DateTo')) {
             return data[column.replace('To', '')] <= parsedFilters[column]
           }
-          return data[column].toLowerCase().includes(parsedFilters[column].toLowerCase())
+          return data[column] && data[column].toLowerCase().includes(parsedFilters[column].toLowerCase())
         })
         .every(Boolean)
     }
