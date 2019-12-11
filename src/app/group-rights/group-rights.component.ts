@@ -67,8 +67,9 @@ export class GroupRightsComponent implements AfterViewInit {
       data: this.service.selectedGroup
     })
 
-    dialogRef.afterClosed().subscribe(({target, fields}) => {
-      if (!target) return
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result || !result.target) return
+      let {target, fields} = result
       let source = this.service.selectedGroup as GroupModel
       if (fields.expiration) fields.expiration = moment(fields.expiration).format('YYYY-MM-DD')
       this.service.copyGroupRights(source.groupId, target.groupId, fields).subscribe(
