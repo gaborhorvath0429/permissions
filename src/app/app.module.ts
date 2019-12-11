@@ -19,9 +19,10 @@ import { UserSearchPipe } from './users/user-search.pipe'
 import { SaveDialogComponent } from './save-dialog/save-dialog.component'
 import { MomentDateAdapter } from '@angular/material-moment-adapter'
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material'
-import { ApiModule } from './backend'
+import { ApiModule, BASE_PATH } from './backend'
 import { SettingsDialogComponent } from './settings-dialog/settings-dialog.component';
 import { CopyRightsDialogComponent } from './copy-rights-dialog/copy-rights-dialog.component'
+import { environment } from 'src/environments/environment'
 
 const DATE_FORMAT = {
   parse: {
@@ -80,6 +81,7 @@ const DATE_FORMAT = {
   providers: [
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},
+    {provide: BASE_PATH, useValue: environment.apiUrl}
   ],
   bootstrap: [AppComponent]
 })
