@@ -8,6 +8,23 @@ import { SystemModel, GroupModel, UserModel, RightModel } from '../models'
 import { MatDialog } from '@angular/material'
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component'
 
+// Decorator function for detecting unsaved changes and prompting if we want to leave or not.
+function CheckForUnsavedChanges(target: object, key: string | symbol, descriptor: PropertyDescriptor) {
+  const original = descriptor.value
+  descriptor.value = function(...args: any[]) {
+    if (this.unsavedChanges) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '300px'
+      })
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) original.apply(this, args)
+      })
+    } else {
+      original.apply(this, args)
+    }
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -71,44 +88,22 @@ export class RightsService {
     )
   }
 
+  @CheckForUnsavedChanges
   public getUserRights(user: UserModel): void {
-    let getData = () => {
-      this.isLoading.next(true)
-      this.selectedUser = user
-      this.userService.getUserRights(user.userId).subscribe((rights: RightModel[]) => {
-        this.userRights.next(this.getAllocatedRights(rights))
-      })
-    }
-    if (this.unsavedChanges) {
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        width: '300px'
-      })
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) getData()
-      })
-    } else {
-      getData()
-    }
+    this.isLoading.next(true)
+    this.selectedUser = user
+    this.userService.getUserRights(user.userId).subscribe((rights: RightModel[]) => {
+      this.userRights.next(this.getAllocatedRights(rights))
+    })
   }
 
+  @CheckForUnsavedChanges
   public getGroupRights(group: GroupModel): void {
-    let getData = () => {
-      this.isLoading.next(true)
-      this.selectedGroup = group
-      this.groupService.getGroupRights(group.groupId).subscribe((rights: RightModel[]) => {
-        this.groupRights.next(this.getAllocatedRights(rights))
-      })
-    }
-    if (this.unsavedChanges) {
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        width: '300px'
-      })
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) getData()
-      })
-    } else {
-      getData()
-    }
+    this.isLoading.next(true)
+    this.selectedGroup = group
+    this.groupService.getGroupRights(group.groupId).subscribe((rights: RightModel[]) => {
+      this.groupRights.next(this.getAllocatedRights(rights))
+    })
   }
 
   public copyGroupRights(sourceGroupId: number, targetGroupId: number, fields: any): Observable<ModelApiResponse> {

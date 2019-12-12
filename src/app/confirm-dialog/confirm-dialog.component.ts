@@ -11,6 +11,6 @@ export class ConfirmDialogComponent {
   constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) { }
 
   onCancelClick(): void {
-    this.dialogRef.close()
+    this.dialogRef.close(false)
   }
 }
