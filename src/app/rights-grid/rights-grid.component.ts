@@ -62,6 +62,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
   setData(data: RightModel[]): void {
     this.setDataSource(new MatTableDataSource(data))
     this.modified = []
+    this.service.unsavedChanges = false
     data.forEach(right => {
       if (right.allocated === '1') this.selection.select(right)
     })
@@ -115,6 +116,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     } else if (row.allocated === '1' && event.checked === true) {
       this.modified = _.reject(this.modified, { right: row })
     }
+    this.service.unsavedChanges = Boolean(this.modified.length)
   }
 
   getColor(row: RightModel): string {

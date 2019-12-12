@@ -22,7 +22,8 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { ApiModule, BASE_PATH } from './backend'
 import { SettingsDialogComponent } from './settings-dialog/settings-dialog.component';
 import { CopyRightsDialogComponent } from './copy-rights-dialog/copy-rights-dialog.component'
-import { environment } from 'src/environments/environment'
+import { environment } from 'src/environments/environment';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component'
 
 const DATE_FORMAT = {
   parse: {
@@ -48,6 +49,7 @@ const DATE_FORMAT = {
     SaveDialogComponent,
     SettingsDialogComponent,
     CopyRightsDialogComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     HttpClientModule,
@@ -78,7 +80,7 @@ const DATE_FORMAT = {
     MatAutocompleteModule,
     MatCardModule
   ],
-  entryComponents: [SaveDialogComponent, SettingsDialogComponent, CopyRightsDialogComponent],
+  entryComponents: [SaveDialogComponent, SettingsDialogComponent, CopyRightsDialogComponent, ConfirmDialogComponent],
   providers: [
     {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
     {provide: MAT_DATE_FORMATS, useValue: DATE_FORMAT},

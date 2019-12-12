@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core'
-import { BehaviorSubject, Observable, Subject } from 'rxjs'
+import { BehaviorSubject, Observable } from 'rxjs'
 import { GroupApiControllerService, UserApiControllerService,
   SystemApiControllerService, RightApiControllerService, ModelApiResponse } from '../backend'
 import { map, tap } from 'rxjs/operators'
 import * as _ from 'lodash'
 import { SystemModel, GroupModel, UserModel, RightModel } from '../models'
+import { MatDialog } from '@angular/material'
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component'
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,10 @@ export class RightsService {
   public selectedUser: UserModel | { displayName: string } = { displayName: '' }
   public selectedGroup: GroupModel | { groupName: string } = { groupName: '' }
 
+  public unsavedChanges = false
+
   constructor(
+    public dialog: MatDialog,
     private rightService: RightApiControllerService,
     private groupService: GroupApiControllerService,
     private userService: UserApiControllerService,
@@ -67,19 +72,43 @@ export class RightsService {
   }
 
   public getUserRights(user: UserModel): void {
-    this.isLoading.next(true)
-    this.selectedUser = user
-    this.userService.getUserRights(user.userId).subscribe((rights: RightModel[]) => {
-      this.userRights.next(this.getAllocatedRights(rights))
-    })
+    let getData = () => {
+      this.isLoading.next(true)
+      this.selectedUser = user
+      this.userService.getUserRights(user.userId).subscribe((rights: RightModel[]) => {
+        this.userRights.next(this.getAllocatedRights(rights))
+      })
+    }
+    if (this.unsavedChanges) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '300px'
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) getData()
+      })
+    } else {
+      getData()
+    }
   }
 
   public getGroupRights(group: GroupModel): void {
-    this.isLoading.next(true)
-    this.selectedGroup = group
-    this.groupService.getGroupRights(group.groupId).subscribe((rights: RightModel[]) => {
-      this.groupRights.next(this.getAllocatedRights(rights))
-    })
+    let getData = () => {
+      this.isLoading.next(true)
+      this.selectedGroup = group
+      this.groupService.getGroupRights(group.groupId).subscribe((rights: RightModel[]) => {
+        this.groupRights.next(this.getAllocatedRights(rights))
+      })
+    }
+    if (this.unsavedChanges) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        width: '300px'
+      })
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) getData()
+      })
+    } else {
+      getData()
+    }
   }
 
   public copyGroupRights(sourceGroupId: number, targetGroupId: number, fields: any): Observable<ModelApiResponse> {
