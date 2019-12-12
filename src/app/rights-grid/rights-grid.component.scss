@@ -20,10 +20,11 @@ mat-radio-button {
 }
 
 .rights-grid-container {
-  z-index: 10;
   position: relative;
   height: 88vh;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;
 }
 
 .buttons {
@@ -54,6 +55,17 @@ mat-toolbar {
   mat-paginator {
     margin-left: auto;
   }
+}
+
+.loading-spinner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  z-index: 1;
 }
 
 @media screen and (max-width: 1426px) {

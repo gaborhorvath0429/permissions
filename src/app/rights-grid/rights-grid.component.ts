@@ -28,6 +28,7 @@ export interface FilterSettings {
   styleUrls: ['./rights-grid.component.scss']
 })
 export class RightsGridComponent extends GridComponent implements OnInit {
+  isLoading = false
   screenHeight = window.innerHeight
   displayedColumns: string[] = ['systemDescription', 'ticket', 'lastModBy', 'lastModDate', 'expiration', 'rightDescription', 'select']
   systems: SystemModel[] = []
@@ -54,6 +55,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
   ngOnInit(): void {
     this.setData([])
     this.service.getSystems().subscribe(systems => this.systems = systems)
+    this.service.isLoading.subscribe(loading => this.isLoading = loading)
   }
 
   // Assign the data to the data source for the table to render
@@ -63,6 +65,7 @@ export class RightsGridComponent extends GridComponent implements OnInit {
     data.forEach(right => {
       if (right.allocated === '1') this.selection.select(right)
     })
+    this.service.isLoading.next(false)
   }
 
   showSettingsDialog(): void {

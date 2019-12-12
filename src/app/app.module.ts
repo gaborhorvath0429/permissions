@@ -6,7 +6,7 @@ import { MatInputModule, MatPaginatorModule, MatProgressSpinnerModule,
   MatSortModule, MatTableModule, MatCheckboxModule, MatToolbarModule, MatListModule,
   MatTreeModule, MatIconModule, MatButtonModule, MatSelectModule, MatRadioModule,
   MatDialogModule, MatDatepickerModule, MatNativeDateModule,
-  MatSnackBarModule, MatBadgeModule, MatAutocompleteModule } from '@angular/material'
+  MatSnackBarModule, MatBadgeModule, MatAutocompleteModule, MatCardModule } from '@angular/material'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
@@ -75,7 +75,8 @@ const DATE_FORMAT = {
     MatNativeDateModule,
     MatSnackBarModule,
     MatBadgeModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    MatCardModule
   ],
   entryComponents: [SaveDialogComponent, SettingsDialogComponent, CopyRightsDialogComponent],
   providers: [

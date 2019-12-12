@@ -28,6 +28,12 @@
 </div>
 
 <div class="rights-grid-container mat-elevation-z8">
+  <mat-card *ngIf="isLoading" class="loading-spinner">
+    <mat-progress-spinner
+      color="primary"
+      mode="indeterminate">
+    </mat-progress-spinner>
+  </mat-card>
   <div class="no-data" *ngIf="!dataSource.data.length">Please select a {{ type }}</div>
     <table mat-table [hidden]="!dataSource.data.length" [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="select">

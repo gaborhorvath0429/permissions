@@ -37,6 +37,7 @@ export class UserRightsComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return
+      this.service.isLoading.next(true)
       let { fields, allocated, unallocated } = result
       if (fields.expiration) fields.expiration = moment(fields.expiration).format('YYYY-MM-DD')
       let promises: Promise<ModelApiResponse>[] = []
@@ -55,7 +56,10 @@ export class UserRightsComponent implements AfterViewInit {
           this.service.getUserRights(this.service.selectedUser)
         }
       ).catch(
-        err => this.snackBar.open(err.error.message, '', {duration: 3000})
+        err => {
+          this.snackBar.open(err.error.message, '', {duration: 3000})
+          this.service.isLoading.next(false)
+        }
       )
     })
   }

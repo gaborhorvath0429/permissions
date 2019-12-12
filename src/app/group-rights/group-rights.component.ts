@@ -38,6 +38,7 @@ export class GroupRightsComponent implements AfterViewInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (!result) return
+      this.service.isLoading.next(true)
       let { fields, allocated, unallocated } = result
       if (fields.expiration) fields.expiration = moment(fields.expiration).format('YYYY-MM-DD')
       let promises: Promise<ModelApiResponse>[] = []
@@ -56,7 +57,10 @@ export class GroupRightsComponent implements AfterViewInit {
           this.service.getGroupRights(this.service.selectedGroup)
         }
       ).catch(
-        err => this.snackBar.open(err.error.message, '', {duration: 3000})
+        err => {
+          this.snackBar.open(err.error.message, '', {duration: 3000})
+          this.service.isLoading.next(false)
+        }
       )
     })
   }

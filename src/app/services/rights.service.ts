@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { BehaviorSubject, Observable } from 'rxjs'
+import { BehaviorSubject, Observable, Subject } from 'rxjs'
 import { GroupApiControllerService, UserApiControllerService,
   SystemApiControllerService, RightApiControllerService, ModelApiResponse } from '../backend'
 import { map, tap } from 'rxjs/operators'
@@ -10,6 +10,7 @@ import { SystemModel, GroupModel, UserModel, RightModel } from '../models'
   providedIn: 'root'
 })
 export class RightsService {
+  public isLoading = new BehaviorSubject<boolean>(false)
 
   public users = new BehaviorSubject<UserModel[]>([])
   public groups = new BehaviorSubject<GroupModel[]>([])
@@ -48,7 +49,7 @@ export class RightsService {
 
         return !parentId
     })
-}
+  }
 
   public getGroups(): Observable<GroupModel[]> {
     return this.groupService.getGroups().pipe(
@@ -66,6 +67,7 @@ export class RightsService {
   }
 
   public getUserRights(user: UserModel): void {
+    this.isLoading.next(true)
     this.selectedUser = user
     this.userService.getUserRights(user.userId).subscribe((rights: RightModel[]) => {
       this.userRights.next(this.getAllocatedRights(rights))
@@ -73,6 +75,7 @@ export class RightsService {
   }
 
   public getGroupRights(group: GroupModel): void {
+    this.isLoading.next(true)
     this.selectedGroup = group
     this.groupService.getGroupRights(group.groupId).subscribe((rights: RightModel[]) => {
       this.groupRights.next(this.getAllocatedRights(rights))
